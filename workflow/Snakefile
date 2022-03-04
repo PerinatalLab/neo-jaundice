@@ -1,0 +1,22 @@
+# The main entry point of the workflow.
+# After configuring, running snakemake -n in a clone of this repository should successfully execute a dry-run of the workflow.
+
+
+
+rule all:
+	input:
+		'results/COJO/checks/COJO_performed',
+		'results/effect_origin/delivery/checks/effect_origin_performed.txt',
+		'results/plots/manhattan/checks/manhattan_performed.txt',
+		'results/PGS/delivery/glm/PGS_haplotype.txt'
+#		'results/HESS/checks/h2_estimated.txt'
+
+include: "rules/common.smk"
+include: "rules/phenotype.smk"
+include: "rules/GWAS.smk"
+include: "rules/QC_GWAS.smk"
+include: "rules/COJO.smk"
+include: "rules/effect_origin.smk"
+include: "rules/figures.smk"
+include: "rules/HESS.smk"
+include: "rules/PGS.smk"

@@ -3,7 +3,7 @@ rule format_sumstats_PGS_catalog:
 	'Format summary statistics from GWAS Catalog.'
 	input:
 		'resources/PGS002160.txt.gz',
-		'results/delivery/MoBa-GWAS-{pheno}-{sample}.txt.gz'
+		'results/GWAS/delivery/MoBa-GWAS-{pheno}-{sample}.txt.gz'
 	output:
 		'results/PGS/aux/weights/betas-{pheno}-{sample}.txt',
 		'results/PGS/aux/variant_id/{pheno}-{sample}.txt'

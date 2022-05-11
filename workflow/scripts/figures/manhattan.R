@@ -33,6 +33,9 @@ HC= -log10(5*10**-8)
 
 print(table(don$nearestGene))
 
+print(length(axisdf$center))
+print(length(c(1:19, '', 21,'', 'X')))
+
 p1= ggplot(data= don, aes(x= BPcum, y= LOG10P, colour= factor(CHR))) +
   geom_point(size= 0.07) +   # Show all points
   theme_cowplot(font_size= 9) +

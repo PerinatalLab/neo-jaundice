@@ -29,6 +29,18 @@ rule list_bgen_samples:
         shell:
                 '/home/pol.sole.navais/soft/qctool_v2.0.8/qctool -g {input[0]} -os {output[0]}'
 
+rule chrX_to_diploid:
+	'Use PLINK2 to convert BGEN haploid males to diplod (pgen file format).'
+	input:
+		'/mnt/archive/MOBAGENETICS/genotypes-base/imputed/all/vcf/X.vcf.gz'
+	output:
+		temp(multiext('results/GWAS/pgen/X', '.pgen', '.pvar', '.psam'))
+	params:
+		'results/GWAS/pgen/X'
+	shell:
+		"/home/pol.sole.navais/soft/plink2 --vcf {input[0]} dosage='DS' --double-id --make-pgen psam-cols=+fid --out {params[0]}"
+
+
 rule REGENIE_step1:
         'Whole genome regression model is fit to the traits.'
         input:
@@ -44,10 +56,10 @@ rule REGENIE_step1:
                 '/mnt/archive/MOBAGENETICS/genotypes-base/imputed/subset/grm-high-quality-pruned/grm-high-quality-pruned',
                 'results/GWAS/regenie/step1/results/{sample}',
                 'results/GWAS/regenie/step1/results/{sample}_temp'
-        threads: 25
+        threads: 30
         shell:
                 '''
-                /home/pol.sole.navais/soft/regenie_v2.2.4.gz_x86_64_Linux \
+                /home/pol.sole.navais/soft/regenie_v3.1.gz_x86_64_Linux \
                 --step 1 \
                 --threads {threads} \
                 --gz \
@@ -64,23 +76,26 @@ rule REGENIE_step1:
                 '''
 
 rule REGENIE_step2:
-        'Whole genome regression model is fit to the traits.'
-        input:
-                '/mnt/archive/MOBAGENETICS/genotypes-base/imputed/all/bgen/{CHR}.bgen',
-                'results/pheno/{sample}_pheno_bin.txt',
-                'results/pheno/{sample}_covars.txt',
-                'results/aux/ids/samples/{sample}_ids.txt',
-                'results/GWAS/regenie/step1/results/{sample}_pred.list',
-                'results/aux/ids/samples/bgen/{CHR}_samples.txt',
-                'results/GWAS/regenie/step1/results/{sample}_1.loco.gz'
-        output:
-                temp(expand('results/GWAS/regenie/step2/temp/{{sample}}/{{CHR}}_{pheno}.regenie', pheno= pheno_file['phenotypes']))
-        params:
-                'results/GWAS/regenie/step2/temp/{sample}/{CHR}'
-        threads: 4
-        shell:
-                '''
-                /home/pol.sole.navais/soft/regenie_v2.2.4.gz_x86_64_Linux \
+	'Whole genome regression model is fit to the traits.'
+	input:
+		'/mnt/archive/MOBAGENETICS/genotypes-base/imputed/all/bgen/{CHR}.bgen',
+		'results/pheno/{sample}_pheno_bin.txt',
+		'results/pheno/{sample}_covars.txt',
+		'results/aux/ids/samples/{sample}_ids.txt',
+		'results/GWAS/regenie/step1/results/{sample}_pred.list',
+		'results/aux/ids/samples/bgen/{CHR}_samples.txt',
+		'results/GWAS/regenie/step1/results/{sample}_1.loco.gz',
+		multiext('results/GWAS/pgen/X', '.pgen', '.pvar', '.psam')
+	output:
+		temp(expand('results/GWAS/regenie/step2/temp/{{sample}}/{{CHR}}_{pheno}.regenie', pheno= pheno_file['phenotypes']))
+	params:
+		'results/GWAS/regenie/step2/temp/{sample}/{CHR}',
+		'results/GWAS/pgen/X'
+	threads: 5
+	run:
+		if wildcards.CHR != 'X':
+			shell('''
+                /home/pol.sole.navais/soft/regenie_v3.1.gz_x86_64_Linux \
                 --step 2 \
                 --bgen {input[0]} \
                 --covarFile {input[2]} \
@@ -94,9 +109,29 @@ rule REGENIE_step2:
                 --sample {input[5]} \
                 --pred {input[4]} \
                 --out {params[0]} \
+		--af-cc \
                 --catCovarList cohort \
                 --verbose
-                '''
+                ''')
+		else:
+			shell('''
+                /home/pol.sole.navais/soft/regenie_v3.1.gz_x86_64_Linux \
+                --step 2 \
+                --pgen {params[1]} \
+                --covarFile {input[2]} \
+                --keep {input[3]} \
+                --phenoFile {input[1]} \
+                --bsize 400 \
+                --bt \
+                --firth --approx \
+                --minINFO 0.6 \
+                --threads {threads} \
+                --pred {input[4]} \
+                --out {params[0]} \
+                --af-cc \
+                --catCovarList cohort \
+                --verbose
+                ''')
 
 rule concat_GWAS_results:
 	'Concatenate results from regenie'

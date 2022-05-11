@@ -14,7 +14,7 @@ CHROM= [i.strip() for i in open(config["CHROM"], 'r')]
 rule phenofile:
         'Pheno file for Jaundice.'
         input:
-                '/mnt/work/pol/MOBAGENETICS/rotterdam2_mfr.csv',
+                '/mnt/archive2/p1724/v12/PDB1724_MFR_541_v12.csv',
                 '/mnt/work/pol/MOBAGENETICS/PREG_ID_to_IID.txt',
                 '/mnt/archive/MOBAGENETICS/genotypes-base/aux/flaglist-merged/mobagen-flaglist-n99259.txt',
                 '/mnt/work/pol/MOBAGENETICS/pca_out.txt'
@@ -24,7 +24,6 @@ rule phenofile:
                 temp('results/aux/pheno/temp/temp_pheno_dads.txt')
         script:
                 '../scripts/pheno_file.R'
-
 
 rule concat_phenos_PCA:
         'Concat pheno files, and add PCA.'

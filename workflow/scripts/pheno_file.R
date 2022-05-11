@@ -3,10 +3,8 @@ library(dplyr)
 library(tidyr)
 
 mfr= fread(snakemake@input[[1]])
-ids= fread(snakemake@input[[2]])
-
-names(ids)= c('PREG_ID', 'IID', 'BATCH', 'Role')
-
+ids= fread(snakemake@input[[2]], header=F)
+names(ids)= c('IID', 'BATCH', 'PREG_ID', 'ROLE')
 ids= filter(ids, BATCH != 'TED')
 
 ids= ids[!duplicated(ids[,c('PREG_ID', 'IID')]), ]
@@ -19,17 +17,20 @@ out= readLines(snakemake@input[[4]])
 
 ids= filter(ids, !(IID %in% out), IID %in% flag$IID)
 
-ids= spread(ids, key= Role, value= IID)
+ids= group_by(ids, PREG_ID, ROLE) %>% filter(row_number()== 1)
 
-mfr= inner_join(mfr, ids, by= c('PREG_ID_315'= 'PREG_ID'))
+ids= spread(ids, key= ROLE, value= IID)
 
-mfr= filter(mfr, FLERFODSEL=='Enkeltfødsel', grepl('Levendefødt', DODKAT))
+mfr= inner_join(mfr, ids, by= c('PREG_ID_1724'= 'PREG_ID'))
 
-mfr$KJONN= with(mfr, ifelse(KJONN== 'Pike', 1, ifelse(is.na(KJONN), NA, 0)))
+mfr= filter(mfr, is.na(FLERFODSEL)) # grepl('Levendefødt', DODKAT))
+mfr= filter(mfr, is.na(DAAR) | DAAR != FAAR)
+mfr$KJONN= with(mfr, ifelse(KJONN== 1, 1, ifelse(KJONN== 2, 0, NA)))
 
-mfr$parity= with(mfr, ifelse(PARITET_5!= '0 (førstegangsfødende)', 1, ifelse(PARITET_5== '0 (førstegangsfødende)', 0, NA)))
+mfr$parity= with(mfr, ifelse(PARITET_5!= 0, 1, ifelse(PARITET_5== 0, 0, NA)))
 
-mfr$jaundice= with(mfr, ifelse(ICTERUS== 'Ja', 1, ifelse(ICTERUS== 'Nei', 0, NA)))
+mfr$jaundice= with(mfr, ifelse(!is.na(ICTERUS), 1, 0))
+
 mfr= arrange(mfr, desc(jaundice))
 
 mfr$cohort= mfr$BATCH
@@ -37,6 +38,10 @@ mfr$cohort= mfr$BATCH
 moms= mfr[!duplicated(mfr$Mother, incomparables= NA), ]
 fets= mfr[!duplicated(mfr$Child, incomparables= NA), ]
 dads= mfr[!duplicated(mfr$Father, incomparables= NA), ]
+
+moms= filter(moms, !duplicated(PREG_ID_1724))
+dads= filter(dads, !duplicated(PREG_ID_1724))
+fets= filter(fets, !duplicated(PREG_ID_1724))
 
 moms= select(moms, Mother, jaundice, cohort, KJONN, parity) %>% filter(!is.na(Mother))
 

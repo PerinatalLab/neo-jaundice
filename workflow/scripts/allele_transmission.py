@@ -37,7 +37,7 @@ fets_snp_list= list()
 h1_df_list= list()
 h3_df_list= list()
 
-for fets in pd.read_csv(snakemake.input[0], sep='\t', header= 0, chunksize= 500):
+for fets in pd.read_csv(snakemake.input[0], sep='\t', header= 0, chunksize= 100):
 	fets_snp_list.append(fets.chr.apply(str) + ':' + fets.pos.apply(str) + ':' + fets.ref + ':' + fets.eff)
 	fets= fets[d.Child]
 	fets= fets.astype(str)

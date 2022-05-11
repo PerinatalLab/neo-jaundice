@@ -12,7 +12,7 @@ rule list_vcf_ids:
 rule merge_vcf_ids:
 	'Keep only IIDs present in all chromosomes.'
 	input:
-		expand('results/effect_origin/aux/vcf_ids/temp/{CHR}-ids.txt', CHR= CHROM)
+		expand('results/GWAS/effect_origin/aux/vcf_ids/temp/{CHR}-ids.txt', CHR= CHROM)
 	output:
 		'results/effect_origin/aux/vcf_ids/allchr-ids.txt'
 	run:
@@ -37,7 +37,7 @@ rule list_trio_ids:
                 'results/effect_origin/aux/ids/dads_toextract.txt',
                 'results/effect_origin/aux/ids/parent_offspring_trios.txt'
         run:
-                d= pd.read_csv(input[0], sep= '\t', header= None, names= ['PREG_ID', 'IID', 'BATCH', 'Role'])
+                d= pd.read_csv(input[0], sep= '\t', header= None, names= ['IID', 'BATCH', 'PREG_ID', 'Role'])
                 x= pd.read_csv(input[1], sep= '\t', header= 0)
                 x= x.loc[x.genotypesOK== True, :]
                 x= x.loc[x.phenoOK== True, :]
@@ -69,7 +69,7 @@ rule list_trio_ids:
 rule format_sumstats:
 	'Remove non-necessary rows from summary statistics.'
 	input:
-		expand('results/delivery/topregions/loci-{{pheno}}-{sample}.txt', sample= fam_ids['fam_id'])
+		expand('results/topregions/delivery/loci-{{pheno}}-{sample}.txt', sample= fam_ids['fam_id'])
 	output:
 		temp('results/effect_origin/aux/top_signals/{pheno}-regions_to_extract.txt'),
 	run:
@@ -135,7 +135,7 @@ rule get_allele_transmission_effect_origin:
                 'results/effect_origin/haplotypes/{pheno}-h3_PREG_ID',
                 'results/effect_origin/haplotypes/{pheno}-h4_PREG_ID'
         script:
-                '../scripts/allele_transmission.py'
+                '../scripts/phase_by_transmission.py'
 
 rule merge_haplotype_pheno:
 	'Merge each haplotype and the pheno file.'

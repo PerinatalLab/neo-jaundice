@@ -110,7 +110,7 @@ rule add_rsid_nearestGene:
 		'resources/HRC/hg19_rsids.txt',
 		'resources/tmp/nearest_gene/{pheno}-{sample}.txt'
 	output:
-		'results/delivery/tmp2/MoBa-GWAS-{pheno}-{sample}.txt'
+		'results/GWAS/delivery/tmp2/MoBa-GWAS-{pheno}-{sample}.txt'
 	run:
 		rsid= pd.read_csv(input[1], sep= '\t', header=0)
 		nearest_gene= pd.read_csv(input[2], sep= '\t', header= None, names= ['CHR', 'X', 'POS', 'ID', 'c1', 'p1', 'p2', 'nearestGene', 'Ensembl_gene'], usecols= ['ID', 'nearestGene'])
@@ -123,9 +123,9 @@ rule add_rsid_nearestGene:
 rule gzip_GWAS_sumstats:
 	'Gzip sumstats.'
 	input:
-		'results/delivery/tmp2/MoBa-GWAS-{pheno}-{sample}.txt'
+		'results/GWAS/delivery/tmp2/MoBa-GWAS-{pheno}-{sample}.txt'
 	output:
-		'results/delivery/MoBa-GWAS-{pheno}-{sample}.txt.gz'
+		'results/GWAS/delivery/MoBa-GWAS-{pheno}-{sample}.txt.gz'
 	shell:
 		'gzip -c {input[0]} > {output[0]}'
 
@@ -133,9 +133,9 @@ rule gzip_GWAS_sumstats:
 rule independent_GWAS_regions:
         'Obtain a file with independent regions for top loci with a radius of 1.5 Mb.'
         input:
-                'results/delivery/MoBa-GWAS-{pheno}-{sample}.txt.gz'
+                'results/GWAS/delivery/MoBa-GWAS-{pheno}-{sample}.txt.gz'
         output:
-                'results/delivery/topregions/loci-{pheno}-{sample}.txt'
+                'results/topregions/delivery/loci-{pheno}-{sample}.txt'
         run:
                 d= pd.read_csv(input[0], sep= '\t', compression= 'gzip')
                 df= d.loc[d.LOG10P> -np.log10(5*10**-8), :]
@@ -159,9 +159,9 @@ rule independent_GWAS_regions:
 rule check_files_QC_GWAS:
 	'Check that the QC files are created.'
 	input:
-		expand('results/delivery/topregions/loci-{pheno}-{sample}.txt', pheno= pheno_file['phenotypes'], sample= fam_ids['fam_id'])
+		expand('results/topregions/delivery/loci-{pheno}-{sample}.txt', pheno= pheno_file['phenotypes'], sample= fam_ids['fam_id'])
 	output:
-		'results/delivery/checks/QC_performed.txt'
+		'results/topregions/delivery/checks/QC_performed.txt'
 	shell:
 		'touch {output[0]}'
 

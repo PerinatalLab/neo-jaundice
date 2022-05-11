@@ -2,8 +2,8 @@
 rule list_variants_COJO:
 	'Obtain a list of variants included in the GWAS.'
 	input:
-		'results/delivery/MoBa-GWAS-{pheno}-{sample}.txt.gz',
-		'results/delivery/topregions/loci-{pheno}-{sample}.txt'
+		'results/GWAS/delivery/MoBa-GWAS-{pheno}-{sample}.txt.gz',
+		'results/topregions/delivery/loci-{pheno}-{sample}.txt'
 	output:
 		'results/aux/COJO/variants/{pheno}-{sample}.txt'
 	run:
@@ -35,6 +35,7 @@ rule list_non_related_samples:
 		remove= selectUnrelated(input[1], d, d.IID)
 		d= d.loc[~d.IID.isin(remove), :]
 		d.to_csv(output[0], sep= '\t', header= True, index= False)
+
 rule filter_bed:
 	'Extract from MoBaGenetics all genetic variants matching women.'
 	input:
@@ -112,7 +113,7 @@ rule bed_list:
 rule format_sumstats_cojo:
 	'Format sumstats according to CGTA cojo.'
 	input:
-		'results/delivery/MoBa-GWAS-{pheno}-{sample}.txt.gz'
+		'results/GWAS/delivery/MoBa-GWAS-{pheno}-{sample}.txt.gz'
 	output:
 		'results/COJO/sumstats/sumstats-{pheno}-{sample}.txt'
 	run:
@@ -129,7 +130,7 @@ rule COJO_slct:
 	'Perform conditional analysis using COJO from GCTA'
 	input:
 		'results/COJO/sumstats/sumstats-{pheno}-{sample}.txt',
-		'results/delivery/topregions/loci-{pheno}-{sample}.txt',
+		'results/topregions/delivery/loci-{pheno}-{sample}.txt',
 		'results/COJO/data/plink/temp/norsid/lf/list_files_{pheno}_{sample}.txt',
 		expand('results/COJO/data/plink/temp/norsid/{{sample}}/{{pheno}}-{{CHR}}_norsid.{ext}', ext= ['bim', 'fam', 'bed']),
 	output:

@@ -24,7 +24,7 @@ ids= spread(ids, key= ROLE, value= IID)
 mfr= inner_join(mfr, ids, by= c('PREG_ID_1724'= 'PREG_ID'))
 
 mfr= filter(mfr, is.na(FLERFODSEL)) # grepl('Levendefødt', DODKAT))
-mfr= filter(mfr, is.na(DAAR) | DAAR != FAAR)
+mfr= filter(mfr, is.na(DAAR) | DAAR != FAAR, is.na(MISD))
 mfr$KJONN= with(mfr, ifelse(KJONN== 1, 1, ifelse(KJONN== 2, 0, NA)))
 
 mfr$parity= with(mfr, ifelse(PARITET_5!= 0, 1, ifelse(PARITET_5== 0, 0, NA)))

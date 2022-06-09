@@ -8,7 +8,12 @@ rule all:
 		'results/COJO/checks/COJO_performed',
 		'results/effect_origin/delivery/checks/effect_origin_performed.txt',
 		'results/plots/manhattan/checks/manhattan_performed.txt',
-		'results/PGS/delivery/glm/PGS_haplotype.txt'
+		'results/PGS/delivery/glm/PGS_haplotype.txt',
+		'results/bilirubin/delivery/lh/total-bilirubin.txt',
+		'results/ABO/delivery/ABO-blood-groups.txt',
+		'results/colocalization/delivery/pph_jaundice_fets.txt',
+		'results/merge_data/delivery/jaundice.txt',
+		'results/merge_data/delivery/jaundice-transmission.txt'
 #		'results/HESS/checks/h2_estimated.txt'
 
 include: "rules/common.smk"
@@ -20,3 +25,7 @@ include: "rules/effect_origin.smk"
 include: "rules/figures.smk"
 include: "rules/HESS.smk"
 include: "rules/PGS.smk"
+include: "rules/total_bilirubin.smk"
+include: "rules/ABO.smk"
+include: "rules/colocalization.smk"
+include: "rules/merge_all_data.smk"

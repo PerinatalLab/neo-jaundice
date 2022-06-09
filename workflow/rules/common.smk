@@ -3,6 +3,8 @@ import numpy as np
 import csv
 import gzip
 from functools import reduce
+from scipy import stats as st
+
 
 ##### load config and sample sheets #####
 

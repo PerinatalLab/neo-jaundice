@@ -30,9 +30,9 @@ rule merge_PGS_nochr2:
                 moms= pd.read_csv(input[0], sep= '\t', header= 0)
 		moms.columns= ['IID', 'moms_jaundice_nochr2']
                 dads= pd.read_csv(input[1], sep= '\t', header= 0)
-		moms.columns= ['IID', 'dads_jaundice_nochr2']
+		dads.columns= ['IID', 'dads_jaundice_nochr2']
                 fets= pd.read_csv(input[2], sep= '\t', header= 0)
-		moms.columns= ['IID', 'fets_jaundice_nochr2']
+		fets.columns= ['IID', 'fets_jaundice_nochr2']
                 trios= pd.read_csv(input[3], sep= '\t', header= 0)
                 d= pd.merge(trios, moms, left_on= 'Mother', right_on= 'IID')
                 d= pd.merge(d, dads, left_on= 'Father', right_on= 'IID')
@@ -76,6 +76,7 @@ rule merge_all_data:
                 'results/effect_origin/delivery/conditional/dosage-jaundice.txt',
                 'results/PGS/delivery/all-jaundice-PGS.txt',
                 'results/PGS/delivery/all-jaundice-PGS-nochr2.txt',
+		'results/effect_origin/delivery/jaundice.txt'
         output:
                 'results/merge_data/delivery/jaundice.txt'
         run:
@@ -86,9 +87,13 @@ rule merge_all_data:
                 ds= pd.read_csv(input[2], header= 0, sep= '\t')
                 pgs= pd.read_csv(input[3], header= 0, sep= '\t')
                 pgsno2= pd.read_csv(input[4], header= 0, sep= '\t')
+		pheno= pd.read_csv(input[5], sep= '\t', header= 0)
+		pheno= pheno[['PREG_ID', 'jaundice', 'KJONN', 'PC1', 'PC2', 'PC3', 'PC4', 'PC5', 'PC6',  'PC7', 'PC8', 'PC9', 'PC10', 'cohort']]
                 d= pd.merge(ds, abo, on= 'PREG_ID')
                 d= pd.merge(d, mfr, left_on= 'PREG_ID', right_on= 'PREG_ID_1724')
                 d= pd.merge(d, pgs, on= 'PREG_ID')
                 d= pd.merge(d, pgsno2, on= 'PREG_ID')
+		d= pd.merge(d, pheno, on= 'PREG_ID')
+		d.columns= d.columns.str.replace(':', '_')
                 d.to_csv(output[0], sep= '\t', header= True, index= False)
 

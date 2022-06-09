@@ -60,6 +60,7 @@ rule sum_PGS:
                 'results/PGS/delivery/{sample}-{pheno}-PGS.txt'
         run:
                 df= pd.read_csv(input[0], sep= '\t', header= 0)
+		df.columns= ['IID', df.columns[0]]
                 df= df.groupby('IID').sum().reset_index()
                 df.to_csv(output[0], sep= '\t', header= True, index= False)
 
@@ -89,6 +90,29 @@ rule overlapping_variants:
                 d.to_csv(output[1], sep= '\t', header= False, index= False)
 
 
+rule concat_CHR_PGS_no_chr2:
+        'Concat PGS from all CHR for each sample. Exclude CHROM 2'
+        input:
+                expand('results/PGS/aux/DS/temp/{autoCHR}-{{pheno}}-{{sample}}.txt', autoCHR= [1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22])
+        output:
+                temp('results/PGS/temp/PGS-{sample}-{pheno}-tosum-nochr2.txt')
+        shell:
+                '''
+                head -1 {input[0]} > {output[0]}
+                tail -n +2 -q {input} >> {output[0]}
+                '''
+
+rule sum_PGS_no_chr2:
+        'Sum chromosome-based GRS for each sample. Exclude CHROM 2'
+        input:
+                'results/PGS/temp/PGS-{sample}-{pheno}-tosum-nochr2.txt'
+        output:
+                'results/PGS/delivery/{sample}-{pheno}-PGS-nochr2.txt'
+        run:
+                df= pd.read_csv(input[0], sep= '\t', header= 0)
+		df.columns= ['IID', df.columns[0]]
+                df= df.groupby('IID').sum().reset_index()
+                df.to_csv(output[0], sep= '\t', header= True, index= False)
 
 rule extract_GT_PGS:
 	''

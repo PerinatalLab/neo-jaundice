@@ -252,7 +252,8 @@ rule conditional_analysis_effect_origin:
                 'results/pheno/fets_covars.txt',
                 'results/effect_origin/aux/ids/parent_offspring_trios.txt'
 	output:
-		'results/effect_origin/delivery/conditional/{pheno}.txt'
+		'results/effect_origin/delivery/conditional/{pheno}.txt',
+		'results/effect_origin/delivery/conditional/dosage-{pheno}.txt'
 	script:
 		'../scripts/effect_origin_conditional.R'
 

@@ -14,6 +14,8 @@ cat('snp\tV.df\tz.df1\tr.df1\tlABF.df1\tV.df2\tz.df2\tr.df2\tlABF.df2\tinternal.
 
 d= fread(snakemake@input[[1]], select= c('ID', 'CHR', 'POS', 'N', 'BETA', 'SE', 'LOG10P', 'EAF'))
 
+d= filter(d, !duplicated(ID))
+
 d$MAF= ifelse(d$EAF>0.5, 1 - d$EAF, d$EAF)
 
 x= fread(snakemake@input[[2]])

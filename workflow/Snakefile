@@ -13,7 +13,8 @@ rule all:
 		'results/ABO/delivery/ABO-blood-groups.txt',
 		'results/colocalization/delivery/pph_jaundice_fets.txt',
 		'results/merge_data/delivery/jaundice.txt',
-		'results/merge_data/delivery/jaundice-transmission.txt'
+		'results/merge_data/delivery/jaundice-transmission.txt',
+		'results/conditional_GWAS/checks/GWAS_performed.txt'
 #		'results/HESS/checks/h2_estimated.txt'
 
 include: "rules/common.smk"
@@ -29,3 +30,4 @@ include: "rules/total_bilirubin.smk"
 include: "rules/ABO.smk"
 include: "rules/colocalization.smk"
 include: "rules/merge_all_data.smk"
+include: "rules/conditional_GWAS.smk"

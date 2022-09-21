@@ -94,3 +94,4 @@ p1= ggplot(data= don, aes(x= BPcum, y= logpval, colour= pheno, alpha= factor(CHR
 save_plot(snakemake@output[[1]], plot= p1, base_height= 90, base_width= 180, units= 'mm', dpi= 300)
 
 
+

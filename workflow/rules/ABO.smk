@@ -33,6 +33,8 @@ rule estimate_blood_group:
 		'results/ABO/GT/{sample}_GT'
 	output:
 		'results/ABO/blood_group/ABO_{sample}.txt'
+	conda:
+		'../envs/plots.yml'
 	script:
 		"../scripts/ABO.R"
 

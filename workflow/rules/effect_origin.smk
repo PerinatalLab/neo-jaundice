@@ -134,8 +134,10 @@ rule get_allele_transmission_effect_origin:
                 'results/effect_origin/haplotypes/{pheno}-h2_PREG_ID',
                 'results/effect_origin/haplotypes/{pheno}-h3_PREG_ID',
                 'results/effect_origin/haplotypes/{pheno}-h4_PREG_ID'
-        script:
-                '../scripts/phase_by_transmission.py'
+	conda:
+		'../envs/plots.yml'
+	script:
+		'../scripts/phase_by_transmission.py'
 
 rule merge_haplotype_pheno:
 	'Merge each haplotype and the pheno file.'
@@ -202,6 +204,8 @@ rule linear_hypotheses:
 		'results/effect_origin/delivery/{pheno}.txt'
 	output:
 		'results/effect_origin/delivery/lh/{pheno}.txt'
+	conda:
+		'../envs/plots.yml'
 	script:
 		'../scripts/linear_hypotheses.R'
 

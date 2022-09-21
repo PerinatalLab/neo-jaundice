@@ -27,7 +27,7 @@ rule format_GWAS:
 rule cut_HRC:
 	'Keep only columns wanted.'
 	input:
-		'/mnt/archive/resources/HRC/HRC.r1-1.GRCh37.wgs.mac5.sites.tab.gz'
+		'/mnt/work/pol/resources/HRC.r1-1.GRCh37.wgs.mac5.sites.tab.gz'
 	output:
 		temp('resources/HRC/tmp/hg19_rsids.txt')
 	shell:
@@ -49,6 +49,8 @@ rule format_HRC:
 				writer = csv.writer(csvfile, delimiter= '\t')
 				writer.writerow([g for g in ['ID', 'rsid']])
 			for row in input_file:
+				if row['ID']== '.':
+					continue
 				if row['REF'] > row['ALT']:
 					ID= row['#CHROM'] + ':' + row['POS'] + ':' + row['ALT'] + ':' + row['REF']
 				else:
@@ -110,7 +112,7 @@ rule add_rsid_nearestGene:
 		'resources/HRC/hg19_rsids.txt',
 		'resources/tmp/nearest_gene/{pheno}-{sample}.txt'
 	output:
-		'results/GWAS/delivery/tmp2/MoBa-GWAS-{pheno}-{sample}.txt'
+		temp('results/GWAS/delivery/tmp2/MoBa-GWAS-{pheno}-{sample}.txt')
 	run:
 		rsid= pd.read_csv(input[1], sep= '\t', header=0)
 		nearest_gene= pd.read_csv(input[2], sep= '\t', header= None, names= ['CHR', 'X', 'POS', 'ID', 'c1', 'p1', 'p2', 'nearestGene', 'Ensembl_gene'], usecols= ['ID', 'nearestGene'])

@@ -36,9 +36,10 @@ rule covariate_file_with_fetal_SNP:
 		covars= pd.merge(covars, d, on= 'IID')
 		pheno= pheno.loc[pheno.IID.isin(covars.IID.values), :]
 		pheno.drop_duplicates('IID', inplace= True)
+		covars.dropna(inplace= True)
 		covars.drop_duplicates('IID', inplace= True)
 		pheno.to_csv(output[0], sep= '\t', header= True, index= False)
-		covars.to_csv(output[1], sep= '\t', header= True, index= False)
+		covars.to_csv(output[1], sep= '\t', header= True, index= False, columns= ['FID', 'IID', 'PC1', 'PC2', 'PC3', 'PC4', 'PC5', 'PC6', 'PC7', 'PC8', 'PC9', 'PC10', 'cohort', 'KJONN', 'top_fetal_SNP'])
 		
 
 rule REGENIE_step1_conditional:

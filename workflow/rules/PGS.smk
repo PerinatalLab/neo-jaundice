@@ -213,6 +213,8 @@ rule PGS_haplotype_analysis:
 		'results/effect_origin/delivery/jaundice.txt'
 	output:
 		'results/PGS/delivery/glm/PGS_haplotype.txt'
+	conda:
+		'../envs/plots.yml'
 	script:
 		'../scripts/PGS_haplotype.R'
 

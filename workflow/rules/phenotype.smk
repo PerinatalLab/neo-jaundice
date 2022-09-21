@@ -22,8 +22,10 @@ rule phenofile:
                 temp('results/aux/pheno/temp/temp_pheno_moms.txt'),
                 temp('results/aux/pheno/temp/temp_pheno_fets.txt'),
                 temp('results/aux/pheno/temp/temp_pheno_dads.txt')
-        script:
-                '../scripts/pheno_file.R'
+	conda:
+		'../envs/plots.yml'
+	script:
+		'../scripts/pheno_file.R'
 
 rule concat_phenos_PCA:
         'Concat pheno files, and add PCA.'

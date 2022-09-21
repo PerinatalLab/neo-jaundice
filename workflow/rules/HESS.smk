@@ -2,9 +2,9 @@
 rule format_sumstats_HESS:
 	'Format summary statistics for HESS heritability estimation.'
 	input:
-		'results/delivery/MoBa-GWAS-{pheno}-{sample}.txt.gz'
+		'results/GWAS/delivery/MoBa-GWAS-{pheno}-{sample}.txt.gz'
 	output:
-		'results/HESS/aux/sumstats/{pheno}-{sample}.txt'
+		temp('results/HESS/aux/sumstats/{pheno}-{sample}.txt')
 	run:
 		d= pd.read_csv(input[0], sep= '\t', header= 0, usecols= ['CHR', 'POS', 'rsid', 'REF', 'EFF', 'N', 'BETA', 'SE'])[['CHR', 'POS', 'rsid', 'REF', 'EFF', 'N', 'BETA', 'SE']]
 		d= d.loc[d.rsid != '.', :]

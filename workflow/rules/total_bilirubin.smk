@@ -12,6 +12,8 @@ rule merge_array_imputed_total_bilirubin:
 		imp_res= imp_res.loc[imp_res.MACH_R2>= 0.7, :]
 		d= pd.concat([array_res, imp_res])
 		print(d.columns)
+		d['ALT']= d.ALT.str.upper()
+		d['REF']= d.REF.str.upper()
 		d= d[['#CHROM', 'POS', 'MarkerName', 'ALT', 'REF', 'Effect', 'StdErr', 'P-value']]
 		d.columns= ['CHROM', 'POS', 'RSID', 'EFF', 'REF', 'BETA', 'SE', 'pvalue']
 		d.to_csv(output[0], sep= '\t', header= True, index= False, compression= 'gzip')
@@ -170,6 +172,8 @@ rule linear_hypotheses_total_bilirubin:
                 'results/bilirubin/delivery/total-bilirubin.txt'
         output:
                 'results/bilirubin/delivery/lh/total-bilirubin.txt'
-        script:
-                '../scripts/linear_hypotheses.R'
+	conda:
+		'../envs/plots.yml'
+	script:
+		'../scripts/linear_hypotheses.R'
 

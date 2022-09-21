@@ -14,8 +14,9 @@ rule all:
 		'results/colocalization/delivery/pph_jaundice_fets.txt',
 		'results/merge_data/delivery/jaundice.txt',
 		'results/merge_data/delivery/jaundice-transmission.txt',
-		'results/conditional_GWAS/checks/GWAS_performed.txt'
-#		'results/HESS/checks/h2_estimated.txt'
+		'results/conditional_GWAS/checks/GWAS_performed.txt',
+		'results/HESS/checks/h2_estimated.txt',
+		'results/plots/manhattan/jaundice-manhattan-mother-child.png'
 
 include: "rules/common.smk"
 include: "rules/phenotype.smk"

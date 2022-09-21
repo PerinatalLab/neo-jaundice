@@ -1,7 +1,6 @@
 library(data.table)
 library(dplyr)
 library(tidyr)
-library(car)
 
 format_haps= function(hap){
 variants= paste(hap$chr, hap$pos, hap$ref, hap$eff, sep =':')

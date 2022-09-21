@@ -1,15 +1,17 @@
 
-rule manhattan_plot:
+rule manhattan_plot_mother_child:
 	'Manhattan plot of GWAS results.'
 	input:
-		'results/GWAS/delivery/MoBa-GWAS-{pheno}-{sample}.txt.gz',
-		'results/topregions/delivery/loci-{pheno}-{sample}.txt'
+		'results/GWAS/delivery/MoBa-GWAS-jaundice-fets.txt.gz',
+		'results/GWAS/delivery/MoBa-GWAS-jaundice-moms.txt.gz'
 	output:
-		'results/plots/manhattan/{pheno}-{sample}.png'
+		'results/plots/manhattan/jaundice-manhattan-mother-child.png'
+	conda:
+		'../envs/plots.yml'
 	script:
-		'../scripts/figures/manhattan.R'
+		'../scripts/figures/manhattan-mother-child.R'
 
-rule check_manhattan:
+rule manhattan_paternal:
 	''
 	input:
 		expand('results/plots/manhattan/{pheno}-{sample}.png', pheno= pheno_file['phenotypes'], sample= fam_ids['fam_id'])

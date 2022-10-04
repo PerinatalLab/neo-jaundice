@@ -7,16 +7,17 @@ rule all:
 	input:
 		'results/COJO/checks/COJO_performed',
 		'results/effect_origin/delivery/checks/effect_origin_performed.txt',
-		'results/plots/manhattan/checks/manhattan_performed.txt',
 		'results/PGS/delivery/glm/PGS_haplotype.txt',
 		'results/bilirubin/delivery/lh/total-bilirubin.txt',
 		'results/ABO/delivery/ABO-blood-groups.txt',
 		'results/colocalization/delivery/pph_jaundice_fets.txt',
-		'results/merge_data/delivery/jaundice.txt',
-		'results/merge_data/delivery/jaundice-transmission.txt',
+		'results/UGT-missense/delivery/jaundice.txt',
+		'results/UGT-missense/delivery/jaundice-transmitted.txt',
 		'results/conditional_GWAS/checks/GWAS_performed.txt',
 		'results/HESS/checks/h2_estimated.txt',
-		'results/plots/manhattan/jaundice-manhattan-mother-child.png'
+		'results/plots/jaundice-manhattan-mother-child.png',
+		'results/plots/fetal-UGT1A4-missense-EAF.pdf',
+		'results/plots/fetal-UGT1A4-GA-interaction.pdf'
 
 include: "rules/common.smk"
 include: "rules/phenotype.smk"
@@ -32,3 +33,4 @@ include: "rules/ABO.smk"
 include: "rules/colocalization.smk"
 include: "rules/merge_all_data.smk"
 include: "rules/conditional_GWAS.smk"
+include: "rules/UGT1A4-missense.smk"

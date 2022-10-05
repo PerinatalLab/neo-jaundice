@@ -28,7 +28,7 @@ m1$term= factor(m1$term, levels= rev(c("chr2_234638006_A_G_h1", "chr2_234638006_
 
 p1= ggplot(m1, aes(x = term, y = estimate)) + 
   geom_hline(aes(yintercept = 0), size = .2, linetype = "dashed") +
-  geom_hline(yintercept = log(seq(0.0, 1.3, 0.2)), size = .1, linetype = "dashed", colour= 'grey') + 
+  geom_hline(yintercept = log(setdiff(seq(0.0, 1.3, 0.2), 1)), size = .1, linetype = "dashed", colour= 'grey') + 
   geom_errorbar(aes(ymin = lo95, ymax = up95), size = .5, width = 0, color = colorBlindBlack8[2]) +
   theme_cowplot(font_size= 10) + 
   geom_point(size = 1, color = colorBlindBlack8[2]) +
@@ -42,7 +42,7 @@ p1= ggplot(m1, aes(x = term, y = estimate)) +
         axis.line = element_line(color = "black", size = 0.2, lineend = "square"),
         axis.ticks.y = element_line(color = "black", size = 0.2))
 
-save_plot(snakemake@output[[1]], plot= p3, base_height= 60, base_width= 90, units= 'mm', dpi= 300)
+save_plot(snakemake@output[[1]], plot= p1, base_height= 60, base_width= 90, units= 'mm', dpi= 300)
 
 m1= glm(jaundice~ chr2_234522619_A_C_h1 + chr2_234522619_A_C_h2 + chr2_234522619_A_C_h3 + chr2_234522619_A_C_h4 + cohort + KJONN, 
         d, family= 'binomial')
@@ -59,7 +59,7 @@ m1$term= factor(m1$term, levels= rev(c("chr2_234522619_A_C_h1", "chr2_234522619_
 
 p2= ggplot(m1, aes(x = term, y = estimate)) + 
   geom_hline(aes(yintercept = 0), size = .2, linetype = "dashed") +
-  geom_hline(yintercept = log(seq(0.0, 1.3, 0.2)), size = .1, linetype = "dashed", colour= 'grey') + 
+  geom_hline(yintercept = log(setdiff(seq(0.0, 1.3, 0.2), 1)), size = .1, linetype = "dashed", colour= 'grey') + 
   geom_errorbar(aes(ymin = lo95, ymax = up95), size = .5, width = 0, color = colorBlindBlack8[2]) +
   theme_cowplot(font_size= 10) + 
   geom_point(size = 1, color = colorBlindBlack8[2]) +
@@ -73,4 +73,4 @@ p2= ggplot(m1, aes(x = term, y = estimate)) +
         axis.line = element_line(color = "black", size = 0.2, lineend = "square"),
         axis.ticks.y = element_line(color = "black", size = 0.2))
 
-save_plot(snakemake@output[[2]], plot= p3, base_height= 60, base_width= 90, units= 'mm', dpi= 300)
+save_plot(snakemake@output[[2]], plot= p2, base_height= 60, base_width= 90, units= 'mm', dpi= 300)

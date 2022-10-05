@@ -23,7 +23,7 @@ d$cat_GA= with(d, ifelse(SVLEN_UL_DG< 259, 'Preterm',
 
 fitted_models= d %>% nest_by(cat_GA) %>% mutate(model= list(glm(jaundice ~ fets_UGT_P24T, data = data, family= 'binomial')))
 
-betas= fitted_models %>% summarize(tidy(model)) 
+betas= fitted_models %>% summarize(tidy(model))
 cis= (fitted_models %>% summarize(confint(model)))
 cis= cbind(data.frame(cis[[1]]), data.frame(term = row.names(cis[[2]]), cis[[2]]))
 
@@ -36,7 +36,7 @@ names(models) = c('cat_GA', 'term', 'estimate', 'se', 'stat', 'pvalue', 'lo95', 
 models$cat_GA= factor(models$cat_GA, levels= c('Preterm', 'Early term', 'Term', 'Post-term'))
   
 p1= ggplot(models, aes(x = cat_GA, y = estimate)) +
-    geom_hline(yintercept = log(seq(0.0, 1.3, 0.2)), size = .1, linetype = "dashed", colour= 'grey') +
+    geom_hline(yintercept = log(setdiff(seq(0.0, 1.3, 0.2), 1)), size = .1, linetype = "dashed", colour= 'grey') +
   geom_hline(aes(yintercept = 0), size = .2, linetype = "dashed") +
   geom_errorbar(aes(ymin = lo95, ymax = up95), size = .2, width = 0, color = colorBlindBlack8[2]) +
   theme_cowplot(font_size= 10) +
@@ -57,7 +57,7 @@ d$fets_UGT_P24T_cat= factor(round(d$fets_UGT_P24T), levels= rev(c(0, 1, 2)), lab
 
 dat_text= data.frame(label= c('CC', 'CA', 'AA'), fets_UGT_P24T_cat= c('CC', 'CA', 'AA'), SVLEN_UL_DG= c(156, 156, 156))
 
-p1= ggplot(data= d, aes(SVLEN_UL_DG, group= factor(jaundice),  fill= factor(jaundice))) + 
+p2= ggplot(data= d, aes(SVLEN_UL_DG, group= factor(jaundice),  fill= factor(jaundice))) + 
     scale_colour_manual(values= colorBlindBlack8[c(2, 6)], guide= 'none') +
   scale_fill_manual(values= colorBlindBlack8[c(2, 6)], guide= 'none') +
   facet_grid(vars(fets_UGT_P24T_cat)) +
@@ -67,6 +67,7 @@ p1= ggplot(data= d, aes(SVLEN_UL_DG, group= factor(jaundice),  fill= factor(jaun
   ylab('Density') +
   xlab('Gestational duration, days') +
     scale_x_continuous(limits= c(154, 308), expand= expansion(add= 1)) +
+  scale_y_continuous(limits= c(0, 0.055), expand= expansion(add= 0)) +
     theme(axis.title.x= element_blank(),
         axis.ticks.x= element_blank(),
         axis.text.x= element_text(size= 8),
@@ -77,7 +78,7 @@ p1= ggplot(data= d, aes(SVLEN_UL_DG, group= factor(jaundice),  fill= factor(jaun
         strip.text.y = element_blank()) +
   geom_text_repel(data= dat_text, aes(x= -Inf, y= Inf, label= label),  inherit.aes = FALSE, hjust= 1)
 
-save_plot(snakemake@output[[2]], plot= p1, base_height= 80, base_width= 110, units= 'mm', dpi= 300)
+save_plot(snakemake@output[[2]], plot= p2, base_height= 80, base_width= 110, units= 'mm', dpi= 300)
 
 fitted_models= d %>% nest_by(ABO_incompatibility) %>% mutate(model= list(glm(jaundice ~ fets_UGT_P24T, data = data, family= 'binomial')))
 
@@ -94,7 +95,7 @@ names(models) = c('ABO', 'term', 'estimate', 'se', 'stat', 'pvalue', 'lo95', 'up
 models$ABO= factor(models$ABO, levels = c(0, 1), labels= c('ABO\ncompatible', 'ABO\nincompatible'))
 
 p3= ggplot(models, aes(x = ABO, y = estimate)) +
-  geom_hline(yintercept = log(seq(0.0, 1.3, 0.2)), size = .1, linetype = "dashed", colour= 'grey') +
+  geom_hline(yintercept = log(setdiff(seq(0.0, 1.3, 0.2), 1)), size = .1, linetype = "dashed", colour= 'grey') +
   geom_hline(aes(yintercept = 0), size = .2, linetype = "dashed") +
   geom_errorbar(aes(ymin = lo95, ymax = up95), size = .2, width = 0, color = colorBlindBlack8[2]) +
   theme_cowplot(font_size= 10) +

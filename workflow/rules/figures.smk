@@ -25,6 +25,18 @@ rule UGT_P24T_jaundice:
 	script:
 		'../scripts/figures/fetal-UGT1A4-missense.R'
 
+
+rule ABO_effect:
+	'Effect of rs687621 on neonatal jaundice with and without adjusting for ABO blood group incompatibility.'
+	input:
+		'/mnt/work/pol/neo-jaundice/results/UGT-missense/delivery/jaundice-transmitted.txt'
+	output:
+		'results/plots/ABO-alleles.pdf'
+	conda:
+		'../envs/plots.yml'
+	script:
+		'../scripts/figures/ABO-maternal.R'
+
 rule UGT_P24T_interaction:
 	'Plot showing the interaction between the effect of the missense variant at UGT1A4 and gestational duration and maternal-fetal ABO incompatibility.'
 	input:
@@ -49,3 +61,17 @@ rule parental_UGT:
 		'../envs/plots.yml'
 	script:
 		'../scripts/figures/parental-UGT-variants.R'
+
+rule PGS:
+	'Plots for the adult bilirubin PGS.'
+	input:
+		'/mnt/work/pol/neo-jaundice/results/UGT-missense/delivery/jaundice.txt',
+		'/mnt/work/pol/neo-jaundice/results/UGT-missense/delivery/jaundice-transmitted.txt'
+	output:
+		'results/plots/adult-bilirubin-PGS-distribution.pdf',
+		'results/plots/adullt-bilirubin-PGS-jaundice.pdf',
+		'results/plots/adult-bilirubin-PGS-phased-alleles.pdf'
+	conda:
+		'../envs/plots.yml'
+	script:
+		'../scripts/figures/PGS.R'

@@ -17,7 +17,9 @@ rule all:
 		'results/HESS/checks/h2_estimated.txt',
 		'results/plots/jaundice-manhattan-mother-child.png',
 		'results/plots/fetal-UGT1A4-missense-EAF.pdf',
-		'results/plots/fetal-UGT1A4-GA-interaction.pdf'
+		'results/plots/fetal-UGT1A4-GA-interaction.pdf',
+		'results/plots/adult-bilirubin-PGS-distribution.pdf',
+		'results/plots/ABO-alleles.pdf'
 
 include: "rules/common.smk"
 include: "rules/phenotype.smk"

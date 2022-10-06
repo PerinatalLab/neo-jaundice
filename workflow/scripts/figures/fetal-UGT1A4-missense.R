@@ -15,7 +15,6 @@ colorBlindBlack8= c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#007
 showtext_opts(dpi = 300)
 showtext_auto(enable = TRUE)
 
-
 d= fread(snakemake@input[[1]], h= T)
 
 x= group_by(d, round(fets_UGT_P24T)) %>% summarize(p= mean(jaundice, na.rm= T), lo95= binom.test(sum(jaundice), n())$conf.int[1], 
@@ -31,7 +30,7 @@ p1= ggplot(data= x, aes(UGT_missense, p*100, alpha= UGT_missense)) +
   theme_cowplot(font_size= 10) + 
   scale_alpha_manual(values= c(0.5, 0.5, 1) , guide= 'none') +
     xlab('rs6755571 genotype') + 
-  ylab('Jaundice prevalence') +
+  ylab('Jaundice risk, %') +
   scale_y_continuous(limits= c(0, 10), expand= expansion(add= c(0, 0.0002))) +
   theme(axis.text.x= element_text(size= 8, margin(t= 0, r= 0, b= 2, l= 0, unit= 'mm')),
         axis.title.x= element_text(margin(t= 2, r= 0, b= 0, l= 0, unit= 'mm')),

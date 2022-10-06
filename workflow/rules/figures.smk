@@ -75,3 +75,34 @@ rule PGS:
 		'../envs/plots.yml'
 	script:
 		'../scripts/figures/PGS.R'
+
+rule QQ_plots:
+	'QQ-plots for GWAS.'
+	input:
+		'results/GWAS/delivery/MoBa-GWAS-jaundice-{sample}.txt.gz'
+	output:
+		'results/plots/QQ-plot-jaundice-{sample}.pdf'
+	conda:
+		'../envs/plots.yml'
+	script:
+                '../scripts/figures/QQ-plot.R'
+
+rule check_QQ_plot:
+	'Rule to check that all QQ plots are done.'
+	input:
+		expand('results/plots/QQ-plot-jaundice-{sample}.pdf', sample= fam_ids['fam_id'])
+	output:
+		'results/plots/checks/QQ-plot.txt'
+	shell:
+		'touch {output[0]}'
+
+rule manhattan_father:
+	'Manhattan plot of Paternal GWAS.'
+	input:
+		'results/GWAS/delivery/MoBa-GWAS-jaundice-dads.txt.gz'
+	output:
+		'results/plots/manhattan-father-jaundice.png'
+	conda:
+		'../envs/plots.yml'
+	script:
+		'../scripts/figures/manhattan-father.R'

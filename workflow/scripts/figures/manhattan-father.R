@@ -62,7 +62,6 @@ p1= ggplot(data= don, aes(x= BPcum, y= LOG10P, colour= CHR2)) +
                   size= 6/ .pt,
                   force_pull= 0, # do not pull toward data points
                   force= 0.1,
-                  nudge_y      =  ifelse(filter(don, GENE!= '') %>% pull(LOG10P)>0, 1, -1),
                   direction    = "both",
                   hjust        = 1,
                   vjust=  0.5,

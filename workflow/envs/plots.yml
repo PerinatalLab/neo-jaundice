@@ -14,3 +14,4 @@ dependencies:
     - r-tidyr=1.2.0
     - r-ggplot2=3.3.6
     - r-broom=0.8.0
+    - r-cairodevice 

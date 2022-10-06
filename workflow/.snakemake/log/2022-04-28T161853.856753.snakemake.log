@@ -1,0 +1,4 @@
+WorkflowError in line 9 of /mnt/work2/pol/neo-jaundice/workflow/rules/common.smk:
+Config file config/config.yaml not found.
+  File "/mnt/work2/pol/neo-jaundice/workflow/Snakefile", line 14, in <module>
+  File "/mnt/work2/pol/neo-jaundice/workflow/rules/common.smk", line 9, in <module>

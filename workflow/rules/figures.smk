@@ -81,7 +81,7 @@ rule QQ_plots:
 	input:
 		'results/GWAS/delivery/MoBa-GWAS-jaundice-{sample}.txt.gz'
 	output:
-		'results/plots/QQ-plot-jaundice-{sample}.pdf'
+		'results/plots/QQ-plot-jaundice-{sample}.png'
 	conda:
 		'../envs/plots.yml'
 	script:
@@ -90,19 +90,52 @@ rule QQ_plots:
 rule check_QQ_plot:
 	'Rule to check that all QQ plots are done.'
 	input:
-		expand('results/plots/QQ-plot-jaundice-{sample}.pdf', sample= fam_ids['fam_id'])
+		expand('results/plots/QQ-plot-jaundice-{sample}.png', sample= fam_ids['fam_id'])
 	output:
 		'results/plots/checks/QQ-plot.txt'
 	shell:
 		'touch {output[0]}'
 
-rule manhattan_father:
+rule manhattan:
 	'Manhattan plot of Paternal GWAS.'
 	input:
-		'results/GWAS/delivery/MoBa-GWAS-jaundice-dads.txt.gz'
+		'results/GWAS/delivery/MoBa-GWAS-jaundice-{sample}.txt.gz'
 	output:
-		'results/plots/manhattan-father-jaundice.png'
+		'results/plots/manhattan-{sample}-jaundice.png'
 	conda:
 		'../envs/plots.yml'
 	script:
-		'../scripts/figures/manhattan-father.R'
+		'../scripts/figures/manhattan.R'
+
+rule check_manhattan:
+        'Manhattan plot of GWAS.'
+        input:
+                expand('results/plots/manhattan-{sample}-jaundice.png', sample= fam_ids['fam_id'])
+        output:
+                'results/plots/checks/manhattan-jaundice.txt'
+        shell:
+                'touch {output[0]}'
+
+
+rule contrast_polygenicity_plot:
+	''
+	input:
+		'results/HESS/contrast-polygenicity/jaundice-{sample}.txt',
+		'results/HESS/contrast-polygenicity/height.txt'
+	output:
+		'results/plots/polygenicity-contrast-jaundice-{sample}.pdf'
+	conda:
+		'../envs/plots.yml'
+	script:
+		'../scripts/figures/contrast_polygenicity.R'
+
+rule check_contrast_polygenicity:
+        'Rule to check that all QQ plots are done.'
+        input:
+                expand('results/plots/polygenicity-contrast-jaundice-{sample}.pdf', sample= fam_ids['fam_id'])
+        output:
+                'results/plots/checks/HESS-plot.txt'
+        shell:
+                'touch {output[0]}'
+
+

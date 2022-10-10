@@ -21,7 +21,8 @@ rule all:
 		'results/plots/adult-bilirubin-PGS-distribution.pdf',
 		'results/plots/ABO-alleles.pdf',
 		'results/plots/checks/QQ-plot.txt',
-		'results/plots/manhattan-father-jaundice.png'
+		'results/plots/checks/manhattan-jaundice.txt',
+		'results/plots/checks/HESS-plot.txt'
 
 include: "rules/common.smk"
 include: "rules/phenotype.smk"

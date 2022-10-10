@@ -63,7 +63,7 @@ p1= ggplot(data= don, aes(x= BPcum, y= LOG10P, colour= CHR2)) +
   theme_cowplot(font_size= 9) +
   scale_colour_manual(values= c(desat_colorBlindBlack8[6], colorBlindBlack8[6]), guide= F) +
   scale_x_continuous(label = c(1:19, '', 21,'', 'X'), breaks= axisdf$center, expand= expansion(0)) +
-  scale_y_continuous(breaks= seq(0, round(max(don$LOG10P)) + 1, 5), labels= seq(0, round(max(don$LOG10P)) + 1, 5)) +
+  scale_y_continuous(breaks= seq(0, round(max(don$LOG10P)) + 1, 5), labels= seq(0, round(max(don$LOG10P)) + 1, 5), expand= expansion(add= c(0, 1))) +
   ylab('-log10(pvalue)') +
   xlab('Chromosome') +
   geom_hline(yintercept= HC, size= 0.2, linetype= 2, colour= '#878787') +

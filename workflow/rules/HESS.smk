@@ -67,3 +67,21 @@ rule check_HESS:
 		'results/HESS/checks/h2_estimated.txt'
 	shell:
 		'touch {output[0]}'
+
+rule contrast_polygenicity:
+	'Contrast polygenicity using code adapted from HESS, which uses jacknife to estimate standard errors.'
+	input:
+		'results/HESS/step2/jaundice-{sample}.txt'
+	output:
+		'results/HESS/contrast-polygenicity/jaundice-{sample}.txt'
+	script:
+		'../scripts/contrast_polygenicity.py'
+
+rule contrast_height_polygenicity:
+	''
+	input:
+		'resources/height.txt'
+	output:
+		'results/HESS/contrast-polygenicity/height.txt'
+	script:
+		'../scripts/contrast_polygenicity.py'

@@ -84,8 +84,8 @@ p1= ggplot(data= don, aes(x= BPcum, y= LOG10P, colour= CHR2)) +
                   segment.inflect= FALSE,
                   segment.colour= colorBlindBlack8[8],
                   segment.linetype = 4,
-                  ylim = c(-Inf, 15),
-                  xlim = c(-Inf, Inf)) +
+                  ylim = c(0, round(max(don$LOG10P))),
+                  xlim = c(0, Inf)) +
   theme(legend.position= 'none',
 	plot.margin = unit(c(t= 0, r=0, b= 0, l=0), 'cm'),
         text= element_text(family="Roboto", size= 9),

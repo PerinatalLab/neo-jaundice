@@ -138,5 +138,3 @@ rule check_contrast_polygenicity:
                 'results/plots/checks/HESS-plot.txt'
         shell:
                 'touch {output[0]}'
-
-

@@ -4,7 +4,7 @@ import csv
 import gzip
 from functools import reduce
 from scipy import stats as st
-
+import time
 
 ##### load config and sample sheets #####
 
@@ -15,6 +15,7 @@ pheno_file= pd.read_csv(config["pheno"], sep= '\t')
 CHROM= [i.strip() for i in open(config["CHROM"], 'r')]
 autosomal_CHR= [i for i in CHROM if i!= 'X']
 haplotypes= [i.strip() for i in open(config["haplotypes"], 'r')]
+eQTL_catalogue_conditions= [i.strip() for i in open(config["eQTL_catalogue_conditions"], 'r')]
 
 def selectUnrelated(input_kin, df, x):
         kin= pd.read_csv(input_kin, header= 0, sep= '\t')

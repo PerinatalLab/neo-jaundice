@@ -23,7 +23,9 @@ rule all:
 		'results/plots/checks/QQ-plot.txt',
 		'results/plots/checks/manhattan-jaundice.txt',
 		'results/plots/checks/HESS-plot.txt',
-		'results/plots/paternal-UGT-alleles.pdf'
+		'results/plots/paternal-UGT-alleles.pdf',
+		'results/eQTL_catalogue/delivery/pph-jaundice-fets.txt',
+		'results/eQTL_catalogue/delivery/SNP-jaundice-fets.txt'
 
 include: "rules/common.smk"
 include: "rules/phenotype.smk"
@@ -40,3 +42,4 @@ include: "rules/colocalization.smk"
 include: "rules/merge_all_data.smk"
 include: "rules/conditional_GWAS.smk"
 include: "rules/UGT1A4-missense.smk"
+include: "rules/eQTL_catalogue.smk"

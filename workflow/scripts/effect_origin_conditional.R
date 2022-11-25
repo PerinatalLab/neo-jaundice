@@ -1,7 +1,6 @@
 library(data.table)
 library(dplyr)
 library(tidyr)
-library(car)
 
 format_haps= function(hap){
 variants= paste(hap$chr, hap$pos, hap$ref, hap$eff, sep =':')
@@ -52,7 +51,12 @@ names(dads_temp)= c('PREG_ID', 'dads')
 
 d= inner_join(pheno, moms_temp, by= 'PREG_ID') %>% inner_join(., fets_temp, by= 'PREG_ID') %>% inner_join(., dads_temp, by= 'PREG_ID')
 
+if (grepl('X', snp)){
 
+d$dads= d$dads * 2
+d$fets= ifelse(d$KJONN== 1, d$fets * 2, d$fets)
+
+}
 m1= glm(jaundice~ fets + moms + dads + KJONN + cohort + PC1 + PC2 + PC3 + PC4 + PC5 + PC6 + PC7 + PC8 + PC9 + PC10, d, family= binomial)
 
 n= length(resid(m1))
@@ -76,6 +80,7 @@ write(results, file= snakemake@output[[1]], append=TRUE)
 
 )
 
+print('Analyses performed, saving data.')
 
 names(fets)[1:(length(names(fets))-4)]= paste0('fets_'  ,names(fets)[1:(length(names(fets))-4)])
 names(moms)[1:(length(names(moms))-4)]= paste0('moms_'  ,names(moms)[1:(length(names(moms))-4)])

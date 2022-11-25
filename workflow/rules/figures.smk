@@ -38,6 +38,19 @@ rule ABO_effect:
 	script:
 		'../scripts/figures/ABO-maternal.R'
 
+rule chrX_locus:
+	'Haplotype-based analysis for the fetal chromosome X locus.'
+	input:
+		'results/UGT-missense/delivery/jaundice-transmitted.txt',
+		'results/effect_origin/delivery/conditional/dosage-jaundice.txt'
+	output:
+		'results/plots/fetal-chrX-haplotype.pdf',
+                'results/plots/fetal-chrX-conditional.pdf'
+	conda:
+                '../envs/plots.yml'
+	script:
+		'../scripts/figures/chrX_locus_haplotype.R'
+
 rule UGT_P24T_interaction:
 	'Plot showing the interaction between the effect of the missense variant at UGT1A4 and gestational duration and maternal-fetal ABO incompatibility.'
 	input:
@@ -138,3 +151,24 @@ rule check_contrast_polygenicity:
                 'results/plots/checks/HESS-plot.txt'
         shell:
                 'touch {output[0]}'
+
+rule eqtl_colocalization:
+	'Circular Column plot for the tissue-agnostic colocalization with all UGT1A* genes.'
+	input:
+		'results/eQTL_catalogue/delivery/pph-jaundice-fets.txt'
+	output:
+		'results/plots/jaundice-fets-eQTL-coloc-{UGT_genes}.pdf'
+	conda:
+		'../envs/plots.yml'
+	script:
+		'../scripts/figures/circular_eQTL_coloc.R'
+
+rule check_eQTL_UGT_genes:
+	'Rule to check that all eqtl colocalization plots are done.'
+	input:
+		expand('results/plots/jaundice-fets-eQTL-coloc-{UGT_genes}.pdf', UGT_genes= ['UGT1A6', 'UGT1A9', 'UGT1A1', 'UGT1A8', 'UGT1A10', 'UGT1A7', 'UGT1A4'])
+	output:
+		'results/plots/checks/jaundice-fets-eQTL-coloc-plot.txt'
+	shell:
+		'touch {output[0]}'
+

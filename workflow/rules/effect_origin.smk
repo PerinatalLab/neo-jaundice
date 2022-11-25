@@ -258,6 +258,8 @@ rule conditional_analysis_effect_origin:
 	output:
 		'results/effect_origin/delivery/conditional/{pheno}.txt',
 		'results/effect_origin/delivery/conditional/dosage-{pheno}.txt'
+	conda:
+                '../envs/plots.yml'
 	script:
 		'../scripts/effect_origin_conditional.R'
 

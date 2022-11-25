@@ -78,7 +78,7 @@ rule jaundice_hg38:
                 'results/eQTL_catalogue/jaundice/temp/hg19/fets-GWAS.txt',
                 'results/eQTL_catalogue/jaundice/temp/fets-GWAS-hg38-keys.txt'
         output:
-                temp('results/eQTL_catalogue/jaundice/temp/hg38/fets-GWAS.txt')
+                'results/eQTL_catalogue/jaundice/temp/hg38/fets-GWAS.txt'
         run:
                 x= pd.read_csv(input[1], sep= '\t', header= None, names= ['CHR', 'start', 'POS', 'ID'])
                 d= pd.read_csv(input[0], header= 0, sep= '\t', usecols = ['rsid', 'MAF', 'BETA', 'SE', 'TOTALSAMPLESIZE', 'REF', 'EFF', 'ID'])

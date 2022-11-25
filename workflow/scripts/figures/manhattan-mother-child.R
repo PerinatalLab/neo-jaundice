@@ -19,7 +19,7 @@ desat_colorBlindBlack8= desat(colorBlindBlack8, 0.5)
 d= fread(snakemake@input[[1]], h= T, select= c('ID', 'CHR', 'POS', 'LOG10P', 'nearestGene', 'rsid'))
 d$pheno= 'Neonate'
 
-d$GENE= ifelse(d$rsid== 'rs17868338', 'UGT1A4', ifelse(d$ID== '23:109792100:C:T', 'RTL9', ''))
+d$GENE= ifelse(d$rsid== 'rs17868338', 'UGT1A*', ifelse(d$ID== '23:109792100:C:T', 'RTL9', ''))
 d= filter(d, !duplicated(ID))
 
 #x=  fread('/mnt/work/pol/neo-jaundice/results/GWAS/delivery/MoBa-GWAS-jaundice-moms.txt.gz', h= T, select= c('ID', 'CHR', 'POS', 'LOG10P', 'nearestGene', 'rsid'))
@@ -103,7 +103,8 @@ p1= ggplot(data= don, aes(x= BPcum, y= logpval, colour= CHR2)) +
                   segment.colour= colorBlindBlack8[8],
                   segment.linetype = 4,
                   ylim = c(-Inf, 60),
-                  xlim = c(-Inf, Inf)) +
+                  xlim = c(-Inf, Inf),
+	            	  fontface = "italic") +
   theme(legend.position= 'none',
 	plot.margin = unit(c(t= 0, r=0, b= 0, l=0), 'cm'),
         text= element_text(family="Roboto", size= 9),

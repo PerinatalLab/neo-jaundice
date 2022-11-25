@@ -81,9 +81,7 @@ df= group_by(df, gene_id) %>% filter(!duplicated(position)) %>% ungroup()
 
 if (nrow(df)== 0) {
 
-file.create(snakemake@output[[1]])
-file.create(snakemake@output[[2]])
-
+print('No data for the genes selected.')
 } else {
 
 eqtl_data_name= snakemake@wildcards[[1]]

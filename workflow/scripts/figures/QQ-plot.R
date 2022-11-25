@@ -16,18 +16,22 @@ showtext_opts(dpi = 300)
 showtext_auto(enable = TRUE)
 
 
-d= arrange(d, LOG10P)
+d= arrange(d, desc(LOG10P))
 d= d[!duplicated(d$ID), ]
 
+df= mutate(d, exp1= -log10(1:length(LOG10P)/length(LOG10P)))
 
-df= arrange(d, LOG10P) %>% mutate(exp1= -log10(1:length(LOG10P)/length(LOG10P)))
+chisq= qchisq(1-10**-df$LOG10P, 1)
+
+lambda_gc= median(chisq)/qchisq(0.5,1)
 
 p1= ggplot(df, aes(exp1, LOG10P)) +
   geom_point(size= 0.4, color= colorBlindBlack8[2]) +
   geom_abline(intercept = 0, slope = 1, alpha = .5) +
 labs(colour="") +
-theme_cowplot(font_size= 12) +
+theme_cowplot(font_size= 10) +
 xlab('Expected (-log10(p-value))') +
-ylab('Observed (-log10(p-value))')
+ylab('Observed (-log10(p-value))') +
+geom_text(aes(4, 2), label= paste("lambda", "==", round(lambda_gc, 2)), size= 10/.pt, parse= T)
 
-ggsave(snakemake@output[[1]], plot= p1, width= 60, height= 60, units= 'mm', dpi= 300)
+ggsave(snakemake@output[[1]], plot= p1, width= 60, height= 60, units= 'mm', dpi= 300, type = "cairo")

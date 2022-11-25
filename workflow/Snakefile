@@ -25,7 +25,9 @@ rule all:
 		'results/plots/checks/HESS-plot.txt',
 		'results/plots/paternal-UGT-alleles.pdf',
 		'results/eQTL_catalogue/delivery/pph-jaundice-fets.txt',
-		'results/eQTL_catalogue/delivery/SNP-jaundice-fets.txt'
+		'results/eQTL_catalogue/delivery/SNP-jaundice-fets.txt',
+		'results/plots/fetal-chrX-haplotype.pdf',
+		'results/plots/checks/jaundice-fets-eQTL-coloc-plot.txt'
 
 include: "rules/common.smk"
 include: "rules/phenotype.smk"

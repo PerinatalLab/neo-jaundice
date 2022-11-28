@@ -10,4 +10,5 @@ Each respective folder (i.e. `scripts`, `rules`, and `envs`) contains scripts ne
 ## Authors
 
 * Pol Sole-Navais (@psnavais)
-
+* Julius Juodakis (@jjuod)
+* Karin Ytterberg (@ykarin97)

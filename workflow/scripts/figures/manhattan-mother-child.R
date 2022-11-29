@@ -81,7 +81,7 @@ p1= ggplot(data= don, aes(x= BPcum, y= logpval, colour= CHR2)) +
                                 colorBlindBlack8[2]), guide= F) +
     scale_x_continuous(label = c(1:19, '', 21,'', 'X'), breaks= axisdf$center, expand= expansion(0)) +
   scale_y_continuous(breaks= seq(-10, 60, 10), labels= c(10, seq(0, 60, 10))) +
-  ylab('-log10(pvalue)') +
+  ylab(expression(-log[10]~p)) +
   xlab('Chromosome') +
   geom_hline(yintercept= c(HC, -HC), size= 0.2, linetype= 2, colour= '#878787') +
   coord_cartesian(clip = "off") +

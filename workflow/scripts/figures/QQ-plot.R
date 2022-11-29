@@ -32,6 +32,6 @@ labs(colour="") +
 theme_cowplot(font_size= 10) +
 xlab('Expected (-log10(p-value))') +
 ylab('Observed (-log10(p-value))') +
-geom_text(aes(4, 2), label= paste("lambda", "==", round(lambda_gc, 2)), size= 10/.pt, parse= T)
+geom_text(aes(6, 0), label= paste("lambda", "==", round(lambda_gc, 2)), size= 10/.pt, parse= T)
 
 ggsave(snakemake@output[[1]], plot= p1, width= 60, height= 60, units= 'mm', dpi= 300, type = "cairo")

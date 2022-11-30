@@ -23,6 +23,8 @@ dads= format_haps(dads)
 pheno= fread(snakemake@input[[4]])
 covar= fread(snakemake@input[[5]])
 trios= fread(snakemake@input[[6]])
+trio_ids= readLines(snakemake@input[[7]])
+trio_ids= gsub(".0", '', trio_ids)
 
 pheno= inner_join(pheno, covar, by= 'IID') %>% inner_join(., trios, by= c('IID'= 'Child')) 
 
@@ -35,6 +37,7 @@ moms$PREG_ID= as.character(moms$PREG_ID)
 dads$PREG_ID= as.character(dads$PREG_ID)
 fets$PREG_ID= as.character(fets$PREG_ID)
 
+pheno= filter(pheno, PREG_ID %in% trio_ids)
 print(nrow(pheno))
 write( paste('snp', 'n', 'beta_fets', 'se_fets', 'pvalue_fets', 'beta_moms', 'se_moms', 'pvalue_moms', 'beta_dads', 'se_dads', 'pvalue_dads', sep= '\t'), snakemake@output[[1]], append= T)
 

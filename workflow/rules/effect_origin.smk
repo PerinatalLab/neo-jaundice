@@ -181,9 +181,10 @@ rule remove_related_effect_origin:
 	'Remove related individuals'
 	input:
 		'results/effect_origin/pheno/temp/{pheno}-all_subjects.txt',
-		'/mnt/archive/MOBAGENETICS/genotypes-base/aux/pedigree/mobagen-ethnic-core-samples.kin0'
+		'/mnt/archive/moba/geno/MOBAGENETICS_1.0/genotypes-base/aux/pedigree/mobagen-ethnic-core-samples.kin0'
 	output:
-		'results/effect_origin/delivery/{pheno}.txt'
+		'results/effect_origin/delivery/{pheno}.txt',
+		'results/effect_origin/ids/PREG_ID_{pheno}.txt'
 	run:
 		d= pd.read_csv(input[0], sep= '\t', header= 0)
 		remove= selectUnrelated(input[1], d, d.Child)
@@ -192,7 +193,11 @@ rule remove_related_effect_origin:
                 d= d.loc[~d.Mother.isin(remove), :]
 		remove= selectUnrelated(input[1], d, d.Father)
                 d= d.loc[~d.Father.isin(remove), :]
+		d= d.sample(frac=1).reset_index(drop=True)
+		d.drop_duplicates(subset= ['Mother'], keep= 'first', inplace= True)
+		d.drop_duplicates(subset= ['Father'], keep= 'first', inplace= True)
 		d.to_csv(output[0], sep= '\t', header= True, index= False)
+		d.to_csv(output[1], sep= '\t', header= False, index= False, columns= ['PREG_ID'])
 
 rule linear_hypotheses:
 	''
@@ -203,7 +208,7 @@ rule linear_hypotheses:
                 'results/effect_origin/haplotypes/{pheno}-h4_PREG_ID',
 		'results/effect_origin/delivery/{pheno}.txt'
 	output:
-		'results/effect_origin/delivery/lh/{pheno}.txt'
+		'results/effect_origin/delivery/lh/{pheno}-results.txt'
 	conda:
 		'../envs/plots.yml'
 	script:
@@ -254,7 +259,8 @@ rule conditional_analysis_effect_origin:
 		'results/effect_origin/DS/allchr/{pheno}-dads_DS.txt',
 		'results/pheno/fets_pheno_bin.txt',
                 'results/pheno/fets_covars.txt',
-                'results/effect_origin/aux/ids/parent_offspring_trios.txt'
+                'results/effect_origin/aux/ids/parent_offspring_trios.txt',
+		'results/effect_origin/ids/PREG_ID_{pheno}.txt'
 	output:
 		'results/effect_origin/delivery/conditional/{pheno}.txt',
 		'results/effect_origin/delivery/conditional/dosage-{pheno}.txt'
@@ -264,12 +270,12 @@ rule conditional_analysis_effect_origin:
 		'../scripts/effect_origin_conditional.R'
 
 rule check_pheno_effect_origin:
-        ''
-        input:
-                expand('results/effect_origin/delivery/lh/{pheno}.txt', pheno= pheno_file['phenotypes']),
-		expand('results/effect_origin/delivery/conditional/{pheno}.txt' , pheno= pheno_file['phenotypes'])
-        output:
-                'results/effect_origin/delivery/checks/effect_origin_performed.txt'
-        shell:
-                'touch {output[0]}'
+	''
+	input:
+		'results/effect_origin/delivery/lh/jaundice-results.txt',
+		'results/effect_origin/delivery/conditional/jaundice.txt'
+	output:
+		'results/effect_origin/delivery/checks/effect_origin_performed.txt'
+	shell:
+		'touch {output[0]}'
 

@@ -4,7 +4,8 @@ rule merge_PGS:
 		'results/PGS/delivery/moms-jaundice-PGS.txt',
 		'results/PGS/delivery/dads-jaundice-PGS.txt',
 		'results/PGS/delivery/fets-jaundice-PGS.txt',
-		'results/effect_origin/aux/ids/parent_offspring_trios.txt'
+		'results/effect_origin/aux/ids/parent_offspring_trios.txt',
+		'results/effect_origin/ids/PREG_ID_jaundice.txt'
 	output:
 		'results/PGS/delivery/all-jaundice-PGS.txt'
 	run:
@@ -15,6 +16,9 @@ rule merge_PGS:
 		d= pd.merge(trios, moms, left_on= 'Mother', right_on= 'IID')
 		d= pd.merge(d, dads, left_on= 'Father', right_on= 'IID')
 		d= pd.merge(d, fets, left_on= 'Child', right_on= 'IID')
+		with open(input[4]) as f:
+			trio_ids = [int(line.rstrip('\n').replace('.0', '')) for line in f]
+		d= d.loc[d.PREG_ID.isin(trio_ids), :]
 		d.to_csv(output[0], sep= '\t', header= True, index= False)
 
 rule merge_PGS_nochr2:
@@ -45,8 +49,8 @@ rule merge_all_data_phased_transmission:
 	input:
 		'results/effect_origin/delivery/jaundice.txt',
 		'results/ABO/delivery/ABO-blood-groups.txt',
-		'/mnt/archive2/p1724/v12/PDB1724_MFR_541_v12.csv',
-		'/mnt/archive2/p1724/v12/PDB1724_Skjema4_6mnd_v12.csv',
+		'/mnt/work/p1724/v12/PDB1724_MFR_541_v12.csv',
+		'/mnt/work/p1724/v12/PDB1724_Skjema4_6mnd_v12.csv',
 		'results/PGS/delivery/h1-jaundice-PGS.txt',
 		'results/PGS/delivery/h2-jaundice-PGS.txt',
 		'results/PGS/delivery/h3-jaundice-PGS.txt',
@@ -76,12 +80,13 @@ rule merge_all_data:
         'Merge all data, including MFR.'
         input:
                 'results/ABO/delivery/ABO-blood-groups.txt',
-                '/mnt/archive2/p1724/v12/PDB1724_MFR_541_v12.csv',
+                '/mnt/work/p1724/v12/PDB1724_MFR_541_v12.csv',
                 'results/effect_origin/delivery/conditional/dosage-jaundice.txt',
                 'results/PGS/delivery/all-jaundice-PGS.txt',
                 'results/PGS/delivery/all-jaundice-PGS-nochr2.txt',
 		'results/effect_origin/delivery/jaundice.txt',
-		'/mnt/archive2/p1724/v12/PDB1724_Skjema4_6mnd_v12.csv'
+		'/mnt/work/p1724/v12/PDB1724_Skjema4_6mnd_v12.csv',
+		'results/effect_origin/ids/PREG_ID_jaundice.txt'
         output:
                 'results/merge_data/delivery/jaundice.txt'
         run:
@@ -103,5 +108,8 @@ rule merge_all_data:
 		q4['time_at_hospital']= np.where(q4.DD16.isnull(), q4.DD17 / 7, q4.DD16)
                 d= pd.merge(d, q4, on= 'PREG_ID_1724', how= 'left')
 		d.columns= d.columns.str.replace(':', '_')
+		with open(input[7]) as f:
+                        trio_ids = [int(line.rstrip('\n').replace('.0', '')) for line in f]
+                d= d.loc[d.PREG_ID.isin(trio_ids), :]
                 d.to_csv(output[0], sep= '\t', header= True, index= False)
 

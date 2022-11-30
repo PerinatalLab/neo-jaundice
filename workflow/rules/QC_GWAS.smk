@@ -2,7 +2,7 @@
 rule format_GWAS:
 	'Format GWAS summary statistics.'
 	input:
-		'results/GWAS/sumstats/GWAS-{pheno}/{sample}.allchr.txt.gz'
+		'results/GWAS/sumstats/GWAS-{pheno}/allchr-{sample}.txt.gz'
 	output:
 		'results/GWAS/delivery/tmp/GWAS-{pheno}-{sample}.allchr.txt',
 		'results/GWAS/delivery/tmp/bedfile-{pheno}-{sample}.allchr.txt'

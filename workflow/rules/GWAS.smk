@@ -138,7 +138,7 @@ rule concat_GWAS_results:
 	input:
 		expand('results/GWAS/regenie/step2/temp/{{sample}}/{CHR}_{{pheno}}.regenie', CHR= CHROM)
 	output:
-		temp('results/GWAS/sumstats/GWAS-{pheno}/temp/{sample}.allchr.txt')
+		temp('results/GWAS/sumstats/GWAS-{pheno}/temp/allchr/{sample}.txt')
 	shell:
 		'''
 		head -1 {input[0]} > {output[0]}
@@ -148,16 +148,16 @@ rule concat_GWAS_results:
 rule gzip_results:
         'Gzip results.'
         input:
-                'results/GWAS/sumstats/GWAS-{pheno}/temp/{sample}.allchr.txt'
+                'results/GWAS/sumstats/GWAS-{pheno}/temp/allchr/{sample}.txt'
         output:
-                'results/GWAS/sumstats/GWAS-{pheno}/{sample}.allchr.txt.gz'
+                'results/GWAS/sumstats/GWAS-{pheno}/allchr-{sample}.txt.gz'
         shell:
                 'gzip -c {input[0]} > {output[0]}'
 
 rule check_results:
 	''
 	input:
-		expand('results/GWAS/sumstats/GWAS-{pheno}/{sample}.allchr.txt.gz', pheno= pheno_file['phenotypes'], sample= fam_ids['fam_id'])
+		expand('results/GWAS/sumstats/GWAS-{pheno}/allchr-{sample}.txt.gz', pheno= pheno_file['phenotypes'], sample= fam_ids['fam_id'])
 	output:
 		'results/GWAS/checks/GWAS_performed.txt'
 	shell:

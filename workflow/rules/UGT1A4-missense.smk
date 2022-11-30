@@ -30,7 +30,8 @@ rule merge_missense_data:
 		'results/effect_origin/aux/ids/parent_offspring_trios.txt',
 		'results/UGT-missense/DS/moms_DS2',
 		'results/UGT-missense/DS/fets_DS2',
-		'results/UGT-missense/DS/dads_DS2'
+		'results/UGT-missense/DS/dads_DS2',
+		'results/effect_origin/ids/PREG_ID_jaundice.txt'
 	output:
 		'results/UGT-missense/delivery/jaundice.txt'
 	run:
@@ -51,6 +52,9 @@ rule merge_missense_data:
 		d['PREG_ID']= d.PREG_ID.apply(int).apply(str)
                 alld['PREG_ID']= alld.PREG_ID.apply(int).apply(str)
 		d= pd.merge(alld, d, on= 'PREG_ID')
+		with open(input[5]) as f:
+			trio_ids = [line.rstrip('\n').replace('.0', '') for line in f]
+		d= d.loc[d.PREG_ID.isin(trio_ids), :]
 		d.to_csv(output[0], sep= '\t', header= True, index= False)
 
 

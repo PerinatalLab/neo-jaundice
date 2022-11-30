@@ -172,3 +172,32 @@ rule check_eQTL_UGT_genes:
 	shell:
 		'touch {output[0]}'
 
+rule UGT1_locuszoom:
+	'Locus zoom plot of UGT1A* genes region for liver and colon eQTL and neonatla jaundice GWAS.'
+	input:
+		'resources/Homo_sapiens.GRCh37.87.chromosome.2.gff3.gz',
+		'results/GWAS/delivery/MoBa-GWAS-jaundice-fets.txt.gz',
+		'results/eQTL_catalogue/data/hg38/formatted/GTEx_ge_colon_transverse.txt.gz',
+		'results/eQTL_catalogue/data/hg38/formatted/GTEx_ge_liver.txt.gz',
+		'results/eQTL_catalogue/jaundice/temp/hg38/fets-GWAS.txt',
+		'results/LD/delivery/UGT1A.ld'
+	output:
+		'results/plots/UGT1A-eQTL-locus-zoom.png'
+	conda:
+		'../envs/plots.yml'
+	script:
+		'../scripts/figures/UGT-locuszoom.R'
+
+
+rule PIP_UGT1A:
+	''
+	input:
+		'resources/Homo_sapiens.GRCh37.87.chromosome.2.gff3.gz',
+		'results/eQTL_catalogue/delivery/SNP-jaundice-fets.txt',
+		'results/eQTL_catalogue/jaundice/temp/hg38/fets-GWAS.txt'
+	output:
+		'results/plots/UGT1A-PIP-eQTL-locus-zoom.png'
+	conda:
+		'../envs/plots.yml'
+	script:
+		'../scripts/figures/PIP-eQTL-colon.R'

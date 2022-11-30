@@ -30,8 +30,8 @@ p1= ggplot(df, aes(exp1, LOG10P)) +
   geom_abline(intercept = 0, slope = 1, alpha = .5) +
 labs(colour="") +
 theme_cowplot(font_size= 10) +
-xlab('Expected (-log10(p-value))') +
-ylab('Observed (-log10(p-value))') +
+xlab(expression(Expected~-log[10]~pvalue)) +
+ylab(expression(Observed~-log[10]~pvalue)) +
 geom_text(aes(6, 0), label= paste("lambda", "==", round(lambda_gc, 2)), size= 10/.pt, parse= T)
 
-ggsave(snakemake@output[[1]], plot= p1, width= 60, height= 60, units= 'mm', dpi= 300, type = "cairo")
+ggsave(snakemake@output[[1]], plot= p1, dpi = 300)

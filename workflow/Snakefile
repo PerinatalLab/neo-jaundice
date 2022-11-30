@@ -5,6 +5,7 @@
 
 rule all:
 	input:
+		'results/GWAS/checks/GWAS_performed.txt',
 		'results/COJO/checks/COJO_performed',
 		'results/effect_origin/delivery/checks/effect_origin_performed.txt',
 		'results/PGS/delivery/glm/PGS_haplotype.txt',
@@ -27,7 +28,9 @@ rule all:
 		'results/eQTL_catalogue/delivery/pph-jaundice-fets.txt',
 		'results/eQTL_catalogue/delivery/SNP-jaundice-fets.txt',
 		'results/plots/fetal-chrX-haplotype.pdf',
-		'results/plots/checks/jaundice-fets-eQTL-coloc-plot.txt'
+		'results/plots/checks/jaundice-fets-eQTL-coloc-plot.txt',
+		'results/plots/UGT1A-eQTL-locus-zoom.png',
+		'results/LD/delivery/UGT1A.ld'
 
 include: "rules/common.smk"
 include: "rules/phenotype.smk"
@@ -45,3 +48,4 @@ include: "rules/merge_all_data.smk"
 include: "rules/conditional_GWAS.smk"
 include: "rules/UGT1A4-missense.smk"
 include: "rules/eQTL_catalogue.smk"
+include: "rules/estimate_LD.smk"

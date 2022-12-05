@@ -24,4 +24,4 @@ rule plink_LD_UGT:
 		'/mnt/archive/moba/geno/MOBAGENETICS_1.0/genotypes-base/imputed/all/plink/2',
 		'results/LD/delivery/UGT1A'
 	shell:
-		"/home/pol.sole.navais/soft/plink --bfile {params[0]} --keep {input[0]} --extract range {input[1]} --r2 --ld-window-r2 0.01 --ld-window 7000 --out {params[1]}"
+		"/home/pol.sole.navais/soft/plink --bfile {params[0]} --keep {input[0]} --extract range {input[1]} --r2 --ld-window-r2 0 --ld-window 7000 --out {params[1]}"

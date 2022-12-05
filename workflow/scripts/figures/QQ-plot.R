@@ -34,4 +34,4 @@ xlab(expression(Expected~-log[10]~pvalue)) +
 ylab(expression(Observed~-log[10]~pvalue)) +
 geom_text(aes(6, 0), label= paste("lambda", "==", round(lambda_gc, 2)), size= 10/.pt, parse= T)
 
-ggsave(snakemake@output[[1]], plot= p1, dpi = 300)
+ggsave(snakemake@output[[1]], plot= p1, dpi = 300, width= 60, height= 60, units= 'mm')

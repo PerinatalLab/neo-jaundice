@@ -77,14 +77,15 @@ rule parental_UGT:
 		'../scripts/figures/parental-UGT-variants.R'
 
 rule PGS:
-	'Plots for the adult bilirubin PGS.'
+	'Plots for the adult bilirubin PGS and locus zoom plot.'
 	input:
-		'results/UGT-missense/delivery/jaundice.txt',
-		'results/UGT-missense/delivery/jaundice-transmitted.txt'
+		'results/GWAS/delivery/MoBa-GWAS-jaundice-fets.txt.gz',
+		'resources/bilirubin/delivery/total-bilirubin-GWAS.txt.gz',
+		'results/LD/delivery/UGT1A.ld',
+		'results/UGT-missense/delivery/jaundice.txt'
 	output:
-		'results/plots/adult-bilirubin-PGS-distribution.pdf',
-		'results/plots/adullt-bilirubin-PGS-jaundice.pdf',
-		'results/plots/adult-bilirubin-PGS-phased-alleles.pdf'
+		'results/plots/locus-zoom-adult-bilirubin-PGS-jaundice.png',
+		'results/plots/adult-bilirubin-PGS-distribution.pdf'
 	conda:
 		'../envs/plots.yml'
 	script:
@@ -192,12 +193,13 @@ rule UGT1_locuszoom:
 rule PIP_UGT1A:
 	''
 	input:
-		'resources/Homo_sapiens.GRCh37.87.chromosome.2.gff3.gz',
 		'results/eQTL_catalogue/delivery/SNP-jaundice-fets.txt',
-		'results/eQTL_catalogue/jaundice/temp/hg38/fets-GWAS.txt'
+		'results/eQTL_catalogue/delivery/pph-jaundice-fets.txt',
+		'results/eQTL_catalogue/jaundice/temp/hg38/fets-GWAS.txt',
+		'results/LD/delivery/UGT1A.ld'
 	output:
-		'results/plots/UGT1A-PIP-eQTL-locus-zoom.png'
+		'results/plots/UGT1A-jaundice-eQTL-correlation.pdf'
 	conda:
 		'../envs/plots.yml'
 	script:
-		'../scripts/figures/PIP-eQTL-colon.R'
+		'../scripts/figures/UGT1-jaundice-eQTL-correlation.R'

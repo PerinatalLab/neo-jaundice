@@ -38,7 +38,7 @@ p1= ggplot(data= x, aes(UGT_missense, p*100, alpha= UGT_missense)) +
         axis.ticks.x= element_blank(),
         axis.line = element_line(color = "black", linewidth = 0.2, lineend = "square"),
         axis.ticks.y = element_line(color = "black", size = 0.2),
-        plot.background = element_rect(colour = colorBlindBlack8[1], fill= NA, linewidth= 0.5))
+        plot.background = element_rect(colour = colorBlindBlack8[1], fill= NA, linewidth= 0.2))
   
 
 

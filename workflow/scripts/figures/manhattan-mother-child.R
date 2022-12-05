@@ -26,7 +26,7 @@ d= filter(d, !duplicated(ID))
 x= fread(snakemake@input[[2]], h= T, select= c('ID', 'CHR', 'POS', 'LOG10P', 'nearestGene', 'rsid'))
 x$pheno= 'Mother'
 
-x$GENE= ifelse(x$rsid == 'rs687621', 'ABO', ifelse(x$rsid== 'rs17868336', 'UGT1A4', ''))
+x$GENE= ifelse(x$rsid == 'rs687621', 'ABO', ifelse(x$rsid== 'rs17868336', 'UGT1A*', ''))
 x= filter(x, !duplicated(ID))
 
 d= arrange(d, POS)
@@ -76,7 +76,7 @@ don$CHR2= paste0(don$CHR2, don$pheno, sep='_')
 p1= ggplot(data= don, aes(x= BPcum, y= logpval, colour= CHR2)) +
    geom_hline(yintercept= 0, size= 0.25, colour= 'black') +
   geom_point(size= 0.07) + # Show all points
-  theme_cowplot(font_size= 9) +
+  theme_cowplot(font_size= 10) +
   scale_colour_manual(values= c(desat_colorBlindBlack8[6], desat_colorBlindBlack8[2], colorBlindBlack8[6], 
                                 colorBlindBlack8[2]), guide= F) +
     scale_x_continuous(label = c(1:19, '', 21,'', 'X'), breaks= axisdf$center, expand= expansion(0)) +
@@ -88,7 +88,7 @@ p1= ggplot(data= don, aes(x= BPcum, y= logpval, colour= CHR2)) +
   geom_text_repel(data= filter(don, GENE!= ''), aes(x= BPcum, y= logpval, label= GENE),
                   colour= c(colorBlindBlack8[2], colorBlindBlack8[2], colorBlindBlack8[6], colorBlindBlack8[6]),
                   alpha= 1,
-                  size= 6/ .pt,
+                  size= 9/ .pt,
                   force_pull= 0, # do not pull toward data points
                   force= 0.1,
                   nudge_y      =  ifelse(filter(don, GENE!= '') %>% pull(logpval)>0, 1, -1),
@@ -107,7 +107,7 @@ p1= ggplot(data= don, aes(x= BPcum, y= logpval, colour= CHR2)) +
 	            	  fontface = "italic") +
   theme(legend.position= 'none',
 	plot.margin = unit(c(t= 0, r=0, b= 0, l=0), 'cm'),
-        text= element_text(family="Roboto", size= 9),
+        text= element_text(family= "Roboto", size= 10),
 	axis.line= element_line(size= 0.1),
 	axis.ticks= element_line(size= 0.1))
 

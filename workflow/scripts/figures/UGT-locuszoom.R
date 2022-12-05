@@ -89,7 +89,6 @@ pall = bind_rows("Neonatal\njaundice"=pgwas, "eQTL colon"=peqc, "eQTL liver"=peq
   filter(POS>234.45e6, POS<234.75e6)
 
 pall = left_join(pall, ld[,c("POS", "R2")])
-pall$R2= ifelse(is.na(pall$R2), 0, pall$R2)
 
 dashed_line= data.frame(source= c('Neonatal\njaundice', 'eQTL colon', 'eQTL liver'), x_inter= c(234627536, NA, NA))
 
@@ -99,27 +98,28 @@ pos_break_fn = function(x) if(max(x)<10) { seq(0,10,2) } else { seq(0, max(x), 2
 
 p1= pall %>%
 filter(!is.na(R2)) %>%
-  ggplot(aes(x=POS/1e6, y=LOG10P)) +
-    geom_point(size=0.8, aes(col=R2)) +
-  geom_point(data=filter(pall, POS==234627536), col="purple", pch=5, size=1.3) +
+  ggplot(aes(x= POS/1e6, y=LOG10P)) +
+    geom_point(size= 0.6, aes(col=R2)) +
+  geom_point(data= filter(pall, POS==234627536), col="purple", pch=18, size= 3) +
   facet_grid2(source~., scales="free_y", axes="all", remove_labels="x") +
-  geom_segment(data=bed, aes(x=start/1e6, xend=end/1e6, y=y, yend=y), size=3, col="darkblue") +
-  geom_segment(data=bed_genes, aes(x=start/1e6, xend=end/1e6, y=y, yend=y), size=0.5, col="darkblue") +
-  geom_text(data=panel_labels, aes(x=234.44, label=source), hjust=0, size=3.7) +
-  geom_text(data=filter(bed_genes, !name %in% c("UGT1A5", "UGT1A6", "UGT1A7", "UGT1A3", "UGT1A10")),
-            aes(x=pmax(x_label, 234.44), label= name, y= y, vjust= 1.7-0.9 * grepl("UGT", name),
-                hjust=-0.1+1.2*grepl("UGT", name)), size= 2, col="grey30", fontface=3) +
+  geom_segment(data= bed, aes(x=start/1e6, xend=end/1e6, y=y, yend=y), size=3, col="darkblue") +
+  geom_segment(data= bed_genes, aes(x=start/1e6, xend=end/1e6, y=y, yend=y), size=0.5, col="darkblue") +
+  geom_text(data= panel_labels, aes(x=234.44, label=source), hjust=0, size=3.5) +
+  geom_text(data= filter(bed_genes, !name %in% c("UGT1A5", "UGT1A6", "UGT1A7", "UGT1A3", "UGT1A10")),
+            aes(x= pmax(x_label, 234.44), label= name, y= y, vjust= 1.7-0.9 * grepl("UGT", name),
+                hjust= -0.1+1.2*grepl("UGT", name)), size= 2.5, col="grey30", fontface=3) +
   #geom_segment(data=filter(bed_genes, name %in% c("UGT1A8", "UGT1A9", "UGT1A4")),
   #             aes(x=x_label, xend=start/1e6-0.001, y=y, yend=y), size=0.3, col="grey30") +
   #geom_segment(data=filter(bed_genes, name=="UGT1A1"),
   #             aes(x=x_label-0.029, xend= end/1e6+0.001, y=y-1, yend=y), size=0.3, col="grey30") +
-  coord_cartesian(xlim=c(234.45, 234.72)) +
-  scale_color_gradient(low="#5782AD", high="#ED1330", name=expression(R^2)) +
-  scale_y_continuous(breaks=pos_break_fn, name=expression(-log[10]~pvalue)) +
-  force_panelsizes(rows=c(1,1,2)) +
+  coord_cartesian(xlim= c(234.45, 234.72)) +
+  scale_color_gradient(low= "#5782AD", high= "#ED1330", name= expression(R^2)) +
+  scale_y_continuous(breaks= pos_break_fn, name= expression(-log[10]~pvalue)) +
+  force_panelsizes(rows= c(1,1,2)) +
   theme_minimal() + 
-  xlab("position, Mbp") +
-  theme(panel.grid.major.x=element_blank(), 
+  xlab("Position, Mbp") +
+  theme(text= element_text(family= "Roboto", size= 10),
+	panel.grid.major.x=element_blank(), 
         panel.grid.minor=element_blank(),
         panel.background = element_rect(fill=NA, colour="grey60"),
         axis.ticks = element_line(colour="grey30", linewidth = 0.1),
@@ -127,7 +127,9 @@ filter(!is.na(R2)) %>%
         axis.line.x=element_line(colour="grey30", linewidth= 0.4),
 	legend.key.size= unit(4, 'mm'),
 	legend.title = element_text(size= 6), #change legend title font size
-        legend.text = element_text(size=6))  +
+        legend.text = element_text(size=6),
+	plot.margin = unit(c(t= 0, r=0, b= 0, l=0), 'cm'),
+	axis.text=element_text(colour="black"))  +
   geom_vline(data= dashed_line, aes(xintercept= x_inter/1e6), linetype= 'dashed', color= 'grey30', linewidth= 0.1)
 
 ggsave(snakemake@output[[1]], plot= p1, width= 180, height= 120, units= 'mm', dpi= 300)

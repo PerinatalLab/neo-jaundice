@@ -203,3 +203,16 @@ rule PIP_UGT1A:
 		'../envs/plots.yml'
 	script:
 		'../scripts/figures/UGT1-jaundice-eQTL-correlation.R'
+
+rule replication_locus_zoom:
+	'Locus zoom plot of UGT1A region for the Danish replication study.'
+	input:
+		'resources/Homo_sapiens.GRCh37.87.chromosome.2.gff3.gz',
+                'results/replication/meta.fetal.NJ.gwas.tbl.gz',
+                'results/LD/delivery/UGT1A.ld'
+	output:
+		'results/plots/replication-UGT1A-locus-zoom.png'
+	conda:
+		'../envs/plots.yml'
+	script:
+		'../scripts/figures/replication-UGT-locuszoom.R'

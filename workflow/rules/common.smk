@@ -42,3 +42,13 @@ def selectUnrelated(input_kin, df, x):
         remove['IID']= remove.FID
         return remove
 
+def format_trios(d, fam, flag, pcs, x):
+	d= d.loc[d[fam].isin(flag.IID.values), :]
+	d= d.loc[d[fam].isin(pcs), :]
+	d= d.loc[d[fam].isin(x.IID.values), :]
+	d.drop_duplicates(subset= [fam], inplace= True, keep= 'first')
+	d= d[[fam]]
+	d.columns= ['IID']
+	return d
+
+

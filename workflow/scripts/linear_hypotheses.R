@@ -7,7 +7,7 @@ variants= paste(hap$chr, hap$pos, hap$ref, hap$eff, sep =':')
 ids= names(hap)[5:ncol(hap)]
 hap= as.data.frame(t(hap[, 5:ncol(hap)]))
 names(hap)= variants
-hap$PREG_ID= as.numeric(ids)
+hap$PREG_ID_1724= as.numeric(ids)
 return(hap)
 }
 
@@ -23,7 +23,7 @@ h4= format_haps(h4)
 
 pheno= fread(snakemake@input[[5]])
 
-pheno$PREG_ID= as.numeric(pheno$PREG_ID)
+pheno$PREG_ID_1724= as.numeric(pheno$PREG_ID_1724)
 
 print(nrow(pheno))
 write( paste('snp', 'n', 'beta_h1', 'se_h1', 'pvalue_h1', 'beta_h2', 'se_h2', 'pvalue_h2', 'beta_h3', 'se_h3', 'pvalue_h3', 'beta_h4', 'se_h4', 'pvalue_h4', sep= '\t'), snakemake@output[[1]], append= T)
@@ -32,17 +32,17 @@ results_list= lapply(names(h1)[1:(length(names(h1))-1)], function(snp) {
 
 print(snp)
 
-h1_temp= h1[, c('PREG_ID', snp)]
-h2_temp= h2[, c('PREG_ID', snp)]
-h3_temp= h3[, c('PREG_ID', snp)]
-h4_temp= h4[, c('PREG_ID', snp)]
+h1_temp= h1[, c('PREG_ID_1724', snp)]
+h2_temp= h2[, c('PREG_ID_1724', snp)]
+h3_temp= h3[, c('PREG_ID_1724', snp)]
+h4_temp= h4[, c('PREG_ID_1724', snp)]
 
-names(h1_temp)= c('PREG_ID', 'h1')
-names(h2_temp)= c('PREG_ID', 'h2')
-names(h3_temp)= c('PREG_ID', 'h3')
-names(h4_temp)= c('PREG_ID', 'h4')
+names(h1_temp)= c('PREG_ID_1724', 'h1')
+names(h2_temp)= c('PREG_ID_1724', 'h2')
+names(h3_temp)= c('PREG_ID_1724', 'h3')
+names(h4_temp)= c('PREG_ID_1724', 'h4')
 
-d= inner_join(pheno, h1_temp, by= 'PREG_ID') %>% inner_join(., h2_temp, by= 'PREG_ID') %>% inner_join(., h3_temp, by= 'PREG_ID') %>% inner_join(., h4_temp, by= 'PREG_ID')
+d= inner_join(pheno, h1_temp, by= 'PREG_ID_1724') %>% inner_join(., h2_temp, by= 'PREG_ID_1724') %>% inner_join(., h3_temp, by= 'PREG_ID_1724') %>% inner_join(., h4_temp, by= 'PREG_ID_1724')
 
 if (grepl('X', snp)) {
 

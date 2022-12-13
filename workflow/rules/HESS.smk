@@ -20,11 +20,11 @@ rule HESS_step1:
 	input:
 		'results/HESS/aux/sumstats/{pheno}-{sample}.txt',
 		'resources/ld_indep_regions.txt',
-		multiext('/mnt/archive/MOBAGENETICS/genotypes-base/imputed/all/plink/{autoCHR}', '.bim', '.bed', '.fam') 
+		multiext('/mnt/archive/moba/geno/MOBAGENETICS_1.0/genotypes-base/imputed/all/plink/{autoCHR}', '.bim', '.bed', '.fam') 
 	output:
 		temp(multiext('results/HESS/step1/{pheno}-{sample}_chr{autoCHR}', '.info.gz', '.eig.gz', '.prjsq.gz', '.log'))
 	params:
-		'/mnt/archive/MOBAGENETICS/genotypes-base/imputed/all/plink/{autoCHR}',
+		'/mnt/archive/moba/geno/MOBAGENETICS_1.0/genotypes-base/imputed/all/plink/{autoCHR}',
 		'results/HESS/step1/{pheno}-{sample}'
 	threads: 10
 	conda:

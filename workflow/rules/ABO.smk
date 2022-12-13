@@ -7,7 +7,7 @@ rule extract_ABO_geno:
 	# OBS! rs8176719 is a deletion, do therefore not exist in our data. Using chr9:136139265 (rs657152) instead - high LD and close to rs8176719. "A" is instead of the deletion and C instead of G
 	'''
         input: 
-		'/mnt/archive/MOBAGENETICS/genotypes-base/imputed/all/vcf/9.vcf.gz',
+		'/mnt/archive/moba/geno/MOBAGENETICS_1.0/genotypes-base/imputed/all/vcf/9.vcf.gz',
 		'results/effect_origin/aux/ids/{sample}_toextract.txt',
 	output:
 		temp('results/ABO/GT/temp/ABO_{sample}.txt')
@@ -74,10 +74,10 @@ rule merge_haplotype_pheno_ABO:
 		d= pd.merge(d, moms, on= 'Mother')
 		d= pd.merge(d, dads, on= 'Father')
 		d= pd.merge(d, fets, on= 'Child')
-                d['PREG_ID']= d.PREG_ID.apply(str)
-		haplotypes= pd.read_csv(input[6], sep= '\t', header= 0, usecols= ['PREG_ID', 'chr9_136137065_A_G_h2', 'chr9_136137065_A_G_h3'])
-		haplotypes['PREG_ID']= haplotypes.PREG_ID.apply(str)
-		d= pd.merge(d, haplotypes, on= 'PREG_ID')
+                d['PREG_ID_1724']= d.PREG_ID_1724.apply(str)
+		haplotypes= pd.read_csv(input[6], sep= '\t', header= 0, usecols= ['PREG_ID_1724', 'chr9_136137065_A_G_h2', 'chr9_136137065_A_G_h3'])
+		haplotypes['PREG_ID_1724']= haplotypes.PREG_ID_1724.apply(str)
+		d= pd.merge(d, haplotypes, on= 'PREG_ID_1724')
 		d['ABO_incompatibility']= np.where((d.ABO_mom== 'O') & ((d.ABO_fet== 'A') | (d.ABO_fet== 'B') | (d.ABO_fet== 'AB')), 1, 0)
                 d.to_csv(output[0], sep= '\t', header= True, index= False)
 
@@ -85,7 +85,7 @@ rule remove_related_effect_origin_ABO:
         'Remove related individuals'
         input:
                 'results/ABO/pheno/temp/all_subjects.txt',
-                '/mnt/archive/MOBAGENETICS/genotypes-base/aux/pedigree/mobagen-ethnic-core-samples.kin0'
+                '/mnt/archive/moba/geno/MOBAGENETICS_1.0/genotypes-base/aux/pedigree/mobagen-ethnic-core-samples.kin0'
         output:
                 'results/ABO/delivery/ABO-blood-groups.txt'
         run:

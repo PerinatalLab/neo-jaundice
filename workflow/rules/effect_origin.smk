@@ -3,7 +3,7 @@
 rule list_vcf_ids:
 	'Obtain list of IID present in each chromosome.'
 	input:
-		'/mnt/archive/MOBAGENETICS/genotypes-base/imputed/all/vcf/{CHR}.vcf.gz'
+		'/mnt/archive/moba/geno/MOBAGENETICS_1.0/genotypes-base/imputed/all/vcf/{CHR}.vcf.gz'
 	output:
 		temp('results/effect_origin/aux/vcf_ids/temp/{CHR}-ids.txt')
 	shell:
@@ -27,43 +27,37 @@ rule merge_vcf_ids:
 rule list_trio_ids:
         'Make a list of trio IDs with genotype data.'
         input:
-                '/mnt/work/pol/MOBAGENETICS/PREG_ID_to_IID.txt',
-                '/mnt/archive/MOBAGENETICS/genotypes-base/aux/flaglist-merged/mobagen-flaglist-n99259.txt',
-                '/mnt/work/pol/MOBAGENETICS/pca_out.txt',
-                'results/effect_origin/aux/vcf_ids/allchr-ids.txt'
+                '/mnt/work/pol/MoBaGenetics-1.0/delivery/sample-ids.txt',
+                '/mnt/archive/moba/geno/MOBAGENETICS_1.0/genotypes-base/aux/flaglist-merged/mobagen-flaglist-n99259.txt',
+                '/mnt/archive/moba/geno/MOBAGENETICS_1.0/genotypes-base/aux/pca/ethnic-core-samples',
+                'results/effect_origin/aux/vcf_ids/allchr-ids.txt',
+		'/mnt/work/pol/MoBaGenetics-1.0/delivery/trio-ids.txt'
         output:
                 'results/effect_origin/aux/ids/fets_toextract.txt',
                 'results/effect_origin/aux/ids/moms_toextract.txt',
                 'results/effect_origin/aux/ids/dads_toextract.txt',
                 'results/effect_origin/aux/ids/parent_offspring_trios.txt'
         run:
-                d= pd.read_csv(input[0], sep= '\t', header= None, names= ['IID', 'BATCH', 'PREG_ID', 'Role'])
-                x= pd.read_csv(input[1], sep= '\t', header= 0)
-                x= x.loc[x.genotypesOK== True, :]
-                x= x.loc[x.phenoOK== True, :]
-                d= d.loc[d.IID.isin(x.IID.values), :]
-                x= [line.strip() for line in open(input[2], 'r')]
-                d= d.loc[~d.IID.isin(x), :]
-                d= d.loc[d.BATCH != 'TED', :]
+                d= pd.read_csv(input[0], sep= '\t', header= 0)
+                flag= pd.read_csv(input[1], sep= '\t', header= 0)
+                flag= flag.loc[flag.genotypesOK== True, :]
+                flag= flag.loc[flag.phenoOK== True, :]
+                pcs= [line.strip() for line in open(input[2], 'r')]
                 x= pd.read_csv(input[3], sep= '\t', header= 0)
-                d= d.loc[d.IID.isin(x.IID.values), :]
-                d.drop_duplicates(subset= ['PREG_ID', 'IID'], inplace= True, keep= 'first')
-                x= d.groupby('PREG_ID').size().reset_index()
-                x= x.loc[x.iloc[:, 1]== 3, :]
-                d= d.loc[d.PREG_ID.isin(x.PREG_ID.values), :]
-                x= d.groupby(['PREG_ID', 'Role']).size().reset_index()
-                x= x.loc[x.iloc[:, 2]>1, :]
-                d= d.loc[~d.PREG_ID.isin(x.PREG_ID.values), :]
-                df= d.pivot(index= 'PREG_ID', columns= 'Role', values= 'IID').reset_index()
-                fets= d.loc[d.Role== 'Child', :]
-                fets.drop_duplicates('IID', inplace= True, keep= 'first')
-                moms= d.loc[d.Role== 'Mother', :]
-                moms.drop_duplicates('IID', inplace= True, keep= 'first')
-                dads= d.loc[d.Role== 'Father', :]
-                dads.drop_duplicates('IID', inplace= True, keep= 'first')
+		fets= format_trios(d, 'Child', flag, pcs, x)
+		print(fets.shape)
+		moms= format_trios(d, 'Mother', flag, pcs, x)
+		dads= format_trios(d, 'Father', flag, pcs, x)
                 fets.to_csv(output[0], columns= ['IID'], sep= '\t', header= False, index= False)
                 moms.to_csv(output[1], columns= ['IID'], sep= '\t', header= False, index= False)
                 dads.to_csv(output[2], columns= ['IID'], sep= '\t', header= False, index= False)
+		df= pd.read_csv(input[4], sep= '\t', header= 0)
+		df= df.loc[df.Child.isin(pcs) & (df.Mother.isin(pcs)) & (df.Father.isin(pcs)), :]
+		df= df.loc[(df.Child.isin(flag.IID.values)) & (df.Mother.isin(flag.IID.values)) & (df.Father.isin(flag.IID.values)), :]
+		df= df.loc[df.BATCH != 'TED', ]
+		df.drop_duplicates('PREG_ID_1724', inplace= True, keep= 'first')
+		df.drop_duplicates('Mother', inplace= True, keep= 'first')
+		df.drop_duplicates('Father', inplace= True, keep= 'first')
                 df.to_csv(output[3], sep= '\t', header= True, index= False)
 
 rule format_sumstats:
@@ -90,7 +84,7 @@ rule get_GT_effect_origin:
         input:
                 'results/effect_origin/aux/top_signals/{pheno}-regions_to_extract.txt',
                 'results/effect_origin/aux/ids/{sample}_toextract.txt',
-                '/mnt/archive/MOBAGENETICS/genotypes-base/imputed/all/vcf/{CHR}.vcf.gz'
+                '/mnt/archive/moba/geno/MOBAGENETICS_1.0/genotypes-base/imputed/all/vcf/{CHR}.vcf.gz'
         output:
                 temp('results/effect_origin/aux/GT/temp/{pheno}/{sample}_gt{CHR}')
         run:
@@ -164,15 +158,15 @@ rule merge_haplotype_pheno:
 			x= pd.DataFrame(x.iloc[:, 4:].T)
 			haplo= input[i].split('-')[1].replace('_PREG_ID', '')
 			x.columns= [i + '_' + haplo for i in varnames]
-			x['PREG_ID']= x.index
+			x['PREG_ID_1724']= x.index
 			df_list.append(x)
-		x= reduce(lambda x, y: pd.merge(x, y, on = 'PREG_ID', how = 'inner'), df_list)
+		x= reduce(lambda x, y: pd.merge(x, y, on = 'PREG_ID_1724', how = 'inner'), df_list)
 		print(x)
 		print('Now d')
 		print(d)
-		x['PREG_ID']= x.PREG_ID.apply(str)
-		d['PREG_ID']= d.PREG_ID.apply(str)
-		x= pd.merge(x, d, on= 'PREG_ID')
+		x['PREG_ID_1724']= x.PREG_ID_1724.apply(str)
+		d['PREG_ID_1724']= d.PREG_ID_1724.apply(str)
+		x= pd.merge(x, d, on= 'PREG_ID_1724')
 		print(x.columns)
 		x.to_csv(output[0], sep= '\t', header= True, index= False)
 
@@ -197,7 +191,7 @@ rule remove_related_effect_origin:
 		d.drop_duplicates(subset= ['Mother'], keep= 'first', inplace= True)
 		d.drop_duplicates(subset= ['Father'], keep= 'first', inplace= True)
 		d.to_csv(output[0], sep= '\t', header= True, index= False)
-		d.to_csv(output[1], sep= '\t', header= False, index= False, columns= ['PREG_ID'])
+		d.to_csv(output[1], sep= '\t', header= False, index= False, columns= ['PREG_ID_1724'])
 
 rule linear_hypotheses:
 	''
@@ -219,7 +213,7 @@ rule get_DS_effect_origin:
         input:
                 'results/effect_origin/aux/top_signals/{pheno}-regions_to_extract.txt',
                 'results/effect_origin/aux/ids/{sample}_toextract.txt',
-                '/mnt/archive/MOBAGENETICS/genotypes-base/imputed/all/vcf/{CHR}.vcf.gz'
+                '/mnt/archive/moba/geno/MOBAGENETICS_1.0/genotypes-base/imputed/all/vcf/{CHR}.vcf.gz'
         output:
                 temp('results/effect_origin/aux/DS/temp/{pheno}/{sample}_ds{CHR}')
         run:

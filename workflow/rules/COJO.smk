@@ -26,7 +26,7 @@ rule list_non_related_samples:
 	'Obtain a list of non-related samples for LD calculation.'
 	input:
 		'results/aux/ids/samples/{sample}_ids.txt',
-		'/mnt/archive/MOBAGENETICS/genotypes-base/aux/pedigree/mobagen-ethnic-core-samples.kin0'
+		'/mnt/archive/moba/geno/MOBAGENETICS_1.0/genotypes-base/aux/pedigree/mobagen-ethnic-core-samples.kin0'
 	output:
 		'results/aux/COJO/non-related/{sample}-ids-plink.txt'
 	run:
@@ -41,13 +41,13 @@ rule filter_bed:
 	input:
 		'results/aux/COJO/non-related/{sample}-ids-plink.txt',
 		'results/aux/COJO/variants/{pheno}-{sample}.txt',
-		'/mnt/archive/MOBAGENETICS/genotypes-base/imputed/all/plink/{CHR}.bed'
+		'/mnt/archive/moba/geno/MOBAGENETICS_1.0/genotypes-base/imputed/all/plink/{CHR}.bed'
 	output:
 		temp('results/COJO/data/plink/temp/{pheno}/{sample}-{CHR}.bed'),
 		temp('results/COJO/data/plink/temp/{pheno}/{sample}-{CHR}.bim'),
 		temp('results/COJO/data/plink/temp/{pheno}/{sample}-{CHR}.fam')
 	params:
-		'/mnt/archive/MOBAGENETICS/genotypes-base/imputed/all/plink/{CHR}',
+		'/mnt/archive/moba/geno/MOBAGENETICS_1.0/genotypes-base/imputed/all/plink/{CHR}',
 		'results/COJO/data/plink/temp/{pheno}/{sample}-{CHR}'
 	threads: 7
 	run:
@@ -160,7 +160,7 @@ rule COJO_slct:
 				pos= int(row['POS'])
 				region= str(row['CHR']) + ' ' + str(pos) + ' ' + '1500'
 				outfile= params[0]
-				shell('~/soft/gcta_1.93.2beta/gcta64 --bfile {params[0]} --maf 0.001 --extract-region-bp {region} --cojo-file {input[0]} --cojo-slct --thread-num {threads} --out {params[1]}')
+				shell('~/soft/gcta-1.94.1-linux-kernel-3-x86_64/gcta-1.94.1 --bfile {params[0]} --maf 0.001 --extract-region-bp {region} --cojo-file {input[0]} --cojo-slct --thread-num {threads} --out {params[1]}')
 				x= pd.read_csv(output[0], sep= '\t', header= 0)
 				print(x.columns)
 				x['locus']= row['nearestGene']

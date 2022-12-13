@@ -23,7 +23,7 @@ rule extract_DS_PGS:
 	input:
 		'results/PGS/aux/variant_id/{pheno}-{sample}.txt',
 		'results/effect_origin/aux/ids/{sample}_toextract.txt',
-		'/mnt/archive/MOBAGENETICS/genotypes-base/imputed/all/vcf/{autoCHR}.vcf.gz'
+		'/mnt/archive/moba/geno/MOBAGENETICS_1.0/genotypes-base/imputed/all/vcf/{autoCHR}.vcf.gz'
 	output:
 		temp('results/PGS/aux/DS/temp/{pheno}/{sample}_ds{autoCHR}')
 	shell:
@@ -90,10 +90,21 @@ rule overlapping_variants:
                 d.to_csv(output[1], sep= '\t', header= False, index= False)
 
 
+rule calculate_PGS_nochr2:
+        'Calculate PGS using dosage.'
+        input:
+                'results/effect_origin/aux/ids/{sample}_toextract.txt',
+                'results/PGS/aux/DS/temp/{pheno}/{sample}_ds{autoCHR}',
+                'results/PGS/aux/weights/betas-{pheno}-{sample}.txt'
+        output:
+                'results/PGS/aux/DS/temp/nochr2/{autoCHR}-{pheno}-{sample}.txt'
+        script:
+                '../scripts/calculate_PGS.py'
+
 rule concat_CHR_PGS_no_chr2:
         'Concat PGS from all CHR for each sample. Exclude CHROM 2'
         input:
-                expand('results/PGS/aux/DS/temp/{autoCHR}-{{pheno}}-{{sample}}.txt', autoCHR= [1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22])
+                expand('results/PGS/aux/DS/temp/nochr2/{autoCHR}-{{pheno}}-{{sample}}.txt', autoCHR= [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22])
         output:
                 temp('results/PGS/temp/PGS-{sample}-{pheno}-tosum-nochr2.txt')
         shell:
@@ -119,7 +130,7 @@ rule extract_GT_PGS:
 	input:
 		'results/PGS/aux/variant_id/{pheno}-all-samples.txt',
 		'results/effect_origin/aux/ids/{sample}_toextract.txt',
-		'/mnt/archive/MOBAGENETICS/genotypes-base/imputed/all/vcf/{autoCHR}.vcf.gz'
+		'/mnt/archive/moba/geno/MOBAGENETICS_1.0/genotypes-base/imputed/all/vcf/{autoCHR}.vcf.gz'
 	output:
 		temp('results/PGS/aux/GT/temp/{pheno}/vcf/{sample}_gt{autoCHR}.vcf'),
 		temp('results/PGS/aux/GT/temp/{pheno}/{sample}_gt{autoCHR}')
@@ -197,7 +208,7 @@ rule check_PGS:
 	'Check all PGS files are created.'
 	input:
 		expand('results/PGS/delivery/{sample}-{pheno}-PGS.txt', sample= fam_ids['fam_id'], pheno= pheno_file['phenotypes']),
-		expand('results/PGS/delivery/{haplo}-{pheno}-PGS.txt', haplo= haplotypes, pheno= pheno_file['phenotypes'])
+#		expand('results/PGS/delivery/{haplo}-{pheno}-PGS.txt', haplo= haplotypes, pheno= pheno_file['phenotypes'])
 	output:
 		'results/PGS/delivery/checks/PGS_performed.txt'
 	shell:

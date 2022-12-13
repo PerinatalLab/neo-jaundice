@@ -5,7 +5,7 @@ PREG_ID= 'PREG_ID'
 Sentrix= 'IID'
 
 def format_df(df):
-        df.columns= d.PREG_ID
+        df.columns= d.PREG_ID_1724
         df[['chr', 'pos', 'ref', 'eff']]= varnames.str.split(':', expand= True)
         cols = list(df.columns.values)
         cols= cols[-4:] + cols[:-4]

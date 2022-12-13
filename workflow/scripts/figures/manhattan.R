@@ -19,10 +19,10 @@ d= fread(snakemake@input[[1]], h= T, select= c('ID', 'CHR', 'POS', 'LOG10P', 'ne
 
 if (snakemake@wildcards[['sample']] == 'fets') {
 
-d$GENE= ifelse(d$rsid== 'rs17868338', 'UGT1A*', ifelse(d$ID== '23:109792100:C:T', 'RTL9', ''))
+d$GENE= ifelse(d$rsid== 'rs17868338', 'UGT1A*', ifelse(d$ID== '23:109792100:C:T', 'CHRDL1', ''))
 
 } else if (snakemake@wildcards[['sample']] == 'moms') { 
-d$GENE= ifelse(d$rsid == 'rs687621', 'ABO', ifelse(d$rsid== 'rs17868336', 'UGT1A*', ''))
+d$GENE= ifelse(d$rsid == 'rs687621', 'ABO', ifelse(d$rsid== 'rs17868336', 'UGT1A*', ifelse(d$ID == '23:109840240:C:T', 'CHRDL1', '')))
 
 } else{
 

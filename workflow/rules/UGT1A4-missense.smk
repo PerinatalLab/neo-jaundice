@@ -3,7 +3,7 @@ rule get_dosage_missense:
 	'Extract dosage for missense variant at UGT1A4.'
 	input:
 		'results/effect_origin/aux/ids/{sample}_toextract.txt',
-		'/mnt/archive/MOBAGENETICS/genotypes-base/imputed/all/vcf/2.vcf.gz'
+		'/mnt/archive/moba/geno/MOBAGENETICS_1.0/genotypes-base/imputed/all/vcf/2.vcf.gz'
 	output:
 		'results/UGT-missense/aux/DS/temp/{sample}_ds2'
 	run:
@@ -49,12 +49,12 @@ rule merge_missense_data:
 		d= pd.merge(trios, moms, on= 'Mother')
 		d= pd.merge(d, dads, on= 'Father')
 		d= pd.merge(d, fets, on= 'Child')
-		d['PREG_ID']= d.PREG_ID.apply(int).apply(str)
-                alld['PREG_ID']= alld.PREG_ID.apply(int).apply(str)
-		d= pd.merge(alld, d, on= 'PREG_ID')
+		d['PREG_ID_1724']= d.PREG_ID_1724.apply(int).apply(str)
+                alld['PREG_ID_1724']= alld.PREG_ID_1724.apply(int).apply(str)
+		d= pd.merge(alld, d, on= 'PREG_ID_1724')
 		with open(input[5]) as f:
 			trio_ids = [line.rstrip('\n').replace('.0', '') for line in f]
-		d= d.loc[d.PREG_ID.isin(trio_ids), :]
+		d= d.loc[d.PREG_ID_1724.isin(trio_ids), :]
 		d.to_csv(output[0], sep= '\t', header= True, index= False)
 
 
@@ -63,7 +63,7 @@ rule get_hard_calls_missense:
 	''
 	input:
 		'results/effect_origin/aux/ids/{sample}_toextract.txt',
-                '/mnt/archive/MOBAGENETICS/genotypes-base/imputed/all/vcf/2.vcf.gz'
+                '/mnt/archive/moba/geno/MOBAGENETICS_1.0/genotypes-base/imputed/all/vcf/2.vcf.gz'
 	output:
 		'results/UGT-missense/aux/GT/temp/{sample}_gt2'
 	run:
@@ -116,10 +116,10 @@ rule merge_missense_hard_calls_pheno:
                         x= pd.DataFrame(x.iloc[:, 4:].T)
                         haplo= input[i].split('/')[-1].replace('_PREG_ID', '')
                         x.columns= [i + '_' + haplo for i in varnames]
-                        x['PREG_ID']= x.index
+                        x['PREG_ID_1724']= x.index
                         df_list.append(x)
-                x= reduce(lambda x, y: pd.merge(x, y, on = 'PREG_ID', how = 'inner'), df_list)
-                x['PREG_ID']= x.PREG_ID.apply(str)
-                d['PREG_ID']= d.PREG_ID.apply(str)
-                x= pd.merge(x, d, on= 'PREG_ID')
+                x= reduce(lambda x, y: pd.merge(x, y, on = 'PREG_ID_1724', how = 'inner'), df_list)
+                x['PREG_ID_1724']= x.PREG_ID_1724.apply(str)
+                d['PREG_ID_1724']= d.PREG_ID_1724.apply(str)
+                x= pd.merge(x, d, on= 'PREG_ID_1724')
                 x.to_csv(output[0], sep= '\t', header= True, index= False)

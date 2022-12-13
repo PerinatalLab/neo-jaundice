@@ -24,7 +24,7 @@ pheno= fread(snakemake@input[[4]])
 covar= fread(snakemake@input[[5]])
 trios= fread(snakemake@input[[6]])
 trio_ids= readLines(snakemake@input[[7]])
-trio_ids= gsub(".0", '', trio_ids)
+trio_ids= as.numeric(trio_ids)
 
 pheno= inner_join(pheno, covar, by= 'IID') %>% inner_join(., trios, by= c('IID'= 'Child')) 
 
@@ -32,27 +32,22 @@ moms= inner_join(moms, trios, by= c('IID'= 'Mother'))
 dads= inner_join(dads, trios, by= c('IID'= 'Father')) 
 fets= inner_join(fets, trios, by= c('IID'= 'Child'))
 
-pheno$PREG_ID= as.character(pheno$PREG_ID)
-moms$PREG_ID= as.character(moms$PREG_ID)
-dads$PREG_ID= as.character(dads$PREG_ID)
-fets$PREG_ID= as.character(fets$PREG_ID)
-
-pheno= filter(pheno, PREG_ID %in% trio_ids)
+pheno= filter(pheno, PREG_ID_1724 %in% trio_ids)
 print(nrow(pheno))
 write( paste('snp', 'n', 'beta_fets', 'se_fets', 'pvalue_fets', 'beta_moms', 'se_moms', 'pvalue_moms', 'beta_dads', 'se_dads', 'pvalue_dads', sep= '\t'), snakemake@output[[1]], append= T)
 
-results_list= lapply(names(fets)[1:(length(names(fets))-4)], function(snp) {
+results_list= lapply(names(fets)[grepl(':', names(fets))], function(snp) {
 
 print(snp)
-moms_temp= moms[, c('PREG_ID', snp)]
-fets_temp= fets[, c('PREG_ID', snp)]
-dads_temp= dads[, c('PREG_ID', snp)]
+moms_temp= moms[, c('PREG_ID_1724', snp)]
+fets_temp= fets[, c('PREG_ID_1724', snp)]
+dads_temp= dads[, c('PREG_ID_1724', snp)]
 
-names(moms_temp)= c('PREG_ID', 'moms')
-names(fets_temp)= c('PREG_ID', 'fets')
-names(dads_temp)= c('PREG_ID', 'dads')
+names(moms_temp)= c('PREG_ID_1724', 'moms')
+names(fets_temp)= c('PREG_ID_1724', 'fets')
+names(dads_temp)= c('PREG_ID_1724', 'dads')
 
-d= inner_join(pheno, moms_temp, by= 'PREG_ID') %>% inner_join(., fets_temp, by= 'PREG_ID') %>% inner_join(., dads_temp, by= 'PREG_ID')
+d= inner_join(pheno, moms_temp, by= 'PREG_ID_1724') %>% inner_join(., fets_temp, by= 'PREG_ID_1724') %>% inner_join(., dads_temp, by= 'PREG_ID_1724')
 
 if (grepl('X', snp)){
 
@@ -85,14 +80,14 @@ write(results, file= snakemake@output[[1]], append=TRUE)
 
 print('Analyses performed, saving data.')
 
-names(fets)[1:(length(names(fets))-4)]= paste0('fets_'  ,names(fets)[1:(length(names(fets))-4)])
-names(moms)[1:(length(names(moms))-4)]= paste0('moms_'  ,names(moms)[1:(length(names(moms))-4)])
-names(dads)[1:(length(names(dads))-4)]= paste0('dads_'  ,names(dads)[1:(length(names(dads))-4)])
+names(fets)[grepl(':', names(fets))]= paste0('fets_'  ,names(fets)[grepl(':', names(fets))])
+names(moms)[grepl(':', names(moms))]= paste0('moms_'  ,names(moms)[grepl(':', names(moms))])
+names(dads)[grepl(':', names(dads))]= paste0('dads_'  ,names(dads)[grepl(':', names(dads))])
 
 fets= select(fets, -c(IID, Mother, Father))
 moms= select(moms, -c(IID, Child, Father))
 dads= select(dads, -c(IID, Mother, Child))
 
-x= inner_join(fets, moms, by= 'PREG_ID') %>% inner_join(., dads, by= 'PREG_ID')
+x= inner_join(fets, moms, by= 'PREG_ID_1724') %>% inner_join(., dads, by= 'PREG_ID_1724')
 
 fwrite(x, snakemake@output[[2]], sep= '\t')

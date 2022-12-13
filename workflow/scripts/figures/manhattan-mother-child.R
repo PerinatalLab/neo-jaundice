@@ -19,14 +19,14 @@ desat_colorBlindBlack8= desat(colorBlindBlack8, 0.5)
 d= fread(snakemake@input[[1]], h= T, select= c('ID', 'CHR', 'POS', 'LOG10P', 'nearestGene', 'rsid'))
 d$pheno= 'Neonate'
 
-d$GENE= ifelse(d$rsid== 'rs17868338', 'UGT1A*', ifelse(d$ID== '23:109792100:C:T', 'RTL9', ''))
+d$GENE= ifelse(d$rsid== 'rs17868338', 'UGT1A*', ifelse(d$ID== '23:109792100:C:T', 'CHRDL1', ''))
 d= filter(d, !duplicated(ID))
 
 #x=  fread('/mnt/work/pol/neo-jaundice/results/GWAS/delivery/MoBa-GWAS-jaundice-moms.txt.gz', h= T, select= c('ID', 'CHR', 'POS', 'LOG10P', 'nearestGene', 'rsid'))
 x= fread(snakemake@input[[2]], h= T, select= c('ID', 'CHR', 'POS', 'LOG10P', 'nearestGene', 'rsid'))
 x$pheno= 'Mother'
 
-x$GENE= ifelse(x$rsid == 'rs687621', 'ABO', ifelse(x$rsid== 'rs17868336', 'UGT1A*', ''))
+x$GENE= ifelse(x$rsid == 'rs687621', 'ABO', ifelse(x$rsid== 'rs17868336', 'UGT1A*', ifelse(x$ID == '23:109840240:C:T', 'CHRDL1', '')))
 x= filter(x, !duplicated(ID))
 
 d= arrange(d, POS)

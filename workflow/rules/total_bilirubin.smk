@@ -61,7 +61,7 @@ rule get_GT_effect_origin_total_bilirubin:
         input:
                 'resources/bilirubin/aux/regions_to_extract.txt',
                 'results/effect_origin/aux/ids/{sample}_toextract.txt',
-                '/mnt/archive/MOBAGENETICS/genotypes-base/imputed/all/vcf/{CHR}.vcf.gz'
+                '/mnt/archive/moba/geno/MOBAGENETICS_1.0/genotypes-base/imputed/all/vcf/{CHR}.vcf.gz'
         output:
                 temp('results/bilirubin/aux/GT/temp/{sample}_gt{CHR}')
         run:
@@ -149,7 +149,7 @@ rule remove_related_effect_origin_total_bilirubin:
         'Remove related individuals'
         input:
                 'results/bilirubin/pheno/temp/all_subjects.txt',
-                '/mnt/archive/MOBAGENETICS/genotypes-base/aux/pedigree/mobagen-ethnic-core-samples.kin0'
+                '/mnt/archive/moba/geno/MOBAGENETICS_1.0/genotypes-base/aux/pedigree/mobagen-ethnic-core-samples.kin0'
         output:
                 'results/bilirubin/delivery/total-bilirubin.txt'
         run:

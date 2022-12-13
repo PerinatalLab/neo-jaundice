@@ -14,10 +14,10 @@ CHROM= [i.strip() for i in open(config["CHROM"], 'r')]
 rule phenofile:
         'Pheno file for Jaundice.'
         input:
-                '/mnt/archive2/p1724/v12/PDB1724_MFR_541_v12.csv',
-                '/mnt/work/pol/MOBAGENETICS/PREG_ID_to_IID.txt',
-                '/mnt/archive/MOBAGENETICS/genotypes-base/aux/flaglist-merged/mobagen-flaglist-n99259.txt',
-                '/mnt/work/pol/MOBAGENETICS/pca_out.txt'
+                '/mnt/work/p1724/v12/PDB1724_MFR_541_v12.csv',
+                '/mnt/work/pol/MoBaGenetics-1.0/delivery/sample-ids.txt',
+                '/mnt/archive/moba/geno/MOBAGENETICS_1.0/genotypes-base/aux/flaglist-merged/mobagen-flaglist-n99259.txt',
+                '/mnt/archive/moba/geno/MOBAGENETICS_1.0/genotypes-base/aux/pca/ethnic-core-samples'
         output:
                 temp('results/aux/pheno/temp/temp_pheno_moms.txt'),
                 temp('results/aux/pheno/temp/temp_pheno_fets.txt'),
@@ -30,9 +30,9 @@ rule phenofile:
 rule concat_phenos_PCA:
         'Concat pheno files, and add PCA.'
         input:
-                '/mnt/archive/MOBAGENETICS/genotypes-base/aux/pca/mobagen-total/mobagen-total-proj-pc',
+                '/mnt/archive/moba/geno/MOBAGENETICS_1.0/genotypes-base/aux/pca/mobagen-total/mobagen-total-proj-pc',
                 'results/aux/pheno/temp/temp_pheno_{sample}.txt',
-                '/mnt/archive/MOBAGENETICS/genotypes-base/aux/pedigree/mobagen-ethnic-core-samples.kin0'
+                '/mnt/archive/moba/geno/MOBAGENETICS_1.0/genotypes-base/aux/pedigree/mobagen-ethnic-core-samples.kin0'
         output:
                 'results/pheno/{sample}_pheno_bin.txt',
                 'results/pheno/{sample}_covars.txt',

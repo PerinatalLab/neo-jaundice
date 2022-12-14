@@ -14,7 +14,7 @@ rule all:
 		'results/colocalization/delivery/pph_jaundice_fets.txt',
 		'results/UGT-missense/delivery/jaundice.txt',
 		'results/UGT-missense/delivery/jaundice-transmitted.txt',
-		'results/conditional_GWAS/checks/GWAS_performed.txt',
+#		'results/conditional_GWAS/checks/GWAS_performed.txt',
 #		'results/HESS/checks/h2_estimated.txt',
 		'results/plots/jaundice-manhattan-mother-child.png',
 		'results/plots/fetal-UGT1A4-missense-EAF.pdf',

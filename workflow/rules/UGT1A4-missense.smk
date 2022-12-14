@@ -55,6 +55,8 @@ rule merge_missense_data:
 		with open(input[5]) as f:
 			trio_ids = [line.rstrip('\n').replace('.0', '') for line in f]
 		d= d.loc[d.PREG_ID_1724.isin(trio_ids), :]
+		d= d.loc[:,~d.columns.str.contains('_y')]
+		d= d.loc[:,~d.columns.str.contains('_x')]
 		d.to_csv(output[0], sep= '\t', header= True, index= False)
 
 

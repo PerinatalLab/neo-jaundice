@@ -33,10 +33,11 @@ resA = fread(snakemake@input[[2]])
 resA = filter(resA, CHROM==2, POS > minpos, POS < maxpos)
 
 # convert string p-vals:
-pvals = strsplit(resA$pvalue, split="e")
-pvals = lapply(pvals, function(x) if(length(x)==1) log10(as.numeric(x)) 
-               else log10(as.numeric(x[[1]])) + as.numeric(x[[2]]))
-resA$LOG10P = -as.numeric(pvals)
+#pvals = strsplit(resA$pvalue, split="e")
+#pvals = lapply(pvals, function(x) if(length(x)==1) log10(as.numeric(x)) 
+#               else log10(as.numeric(x[[1]])) + as.numeric(x[[2]]))
+resA$LOG10P= -1*(pnorm(-abs(resA$BETA / resA$SE),log.p = T)*1/log(10) + log10(2))
+#resA$LOG10P = -as.numeric(pvals)
 
 resA = filter(resA, POS %in% resR$POS)
 
@@ -72,7 +73,7 @@ p_FA = ggplot(res, aes(x=POS/1e6, y=LOG10P)) +
   scale_x_continuous(expand = c(0,0), limits=c(234.46, 234.72)) +
   facetted_pos_scales(y=panel_scales) + 
   theme_bw() + xlab("Position, Mbp") + ylab(expression(-log[10]~p)) + 
-  theme(text= element_text(family= "Roboto", size= 10),
+  theme(text= element_text(family= "Arial", size= 10),
 	panel.grid.major.x=element_blank(), 
         panel.grid.minor=element_blank(),
         panel.background = element_rect(fill=NA, colour="grey60"),
@@ -105,7 +106,7 @@ x2= group_by(d, PGS_cat_nochr2) %>%
             up95= binom.test(sum(jaundice), n())$conf.int[2])
 
 names(x2)[1]= 'PGS'
-x2$chr= 'No chr2'
+x2$chr= 'No UGT1A*'
 
 x2$PGS= factor(x2$PGS)
 
@@ -115,16 +116,17 @@ p2= ggplot(data= x, aes(PGS, p*100, colour= chr, group= chr)) +
   geom_point(position= position_dodge2(width= 0.5)) +
   geom_linerange( aes(x= PGS, ymin= lo95*100, ymax= up95*100, colour= chr), alpha= 1, size= 0.7, 
                   position= position_dodge2(width= 0.5)) +
-  scale_color_manual(values= colorBlindBlack8[c(6, 2)], name=NULL) +
-  theme_cowplot(font_size= 11) + 
+  scale_color_manual(values= colorBlindBlack8[c(6, 2)], name=NULL, labels= c('Full', expression(Excluding~italic('UGT1A*')~region))) +
+  theme_cowplot(font_size= 10) + 
   xlab('Adult bilirubin polygenic\nscore decile') + 
   ylab('Jaundice prevalence, %') +
   scale_y_continuous(limits= c(0, 12), expand= expansion(add= c(0, 0.0002))) +
-  theme(text= element_text(family= "Roboto", size= 10),
+  theme(text= element_text(size= 10),
         axis.ticks.x= element_blank(),
         axis.line = element_line(color = "black", size = 0.2, lineend = "square"),
         axis.ticks.y = element_line(color = "black", size = 0.2),
-        legend.position = c(0.7, 0.1),
+        legend.position = c(0.1, 0.1),
+	legend.text.align = 0,
 	axis.text= element_text(color= 'black'))
 
 p3= plot_grid(p_FA, p2, labels="AUTO", rel_widths = c(6,4), rel_heights= c(6, 4))

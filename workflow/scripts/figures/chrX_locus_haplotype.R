@@ -17,7 +17,7 @@ showtext_auto(enable = TRUE)
 
 d= fread(snakemake@input[[1]], header = T)
 
-m1= glm(jaundice~ chrX_109792100_C_T_h1 + chrX_109792100_C_T_h2 + chrX_109792100_C_T_h3 + cohort + KJONN + PC1 + PC2 + PC3 + PC4 + PC5 + PC6  + PC7 + PC8 + PC9 + PC10, filter(d, KJONN== 0), family= 'binomial')
+m1= glm(jaundice~ chrX_109792100_C_T_h1 + chrX_109792100_C_T_h2 + chrX_109792100_C_T_h3 + cohort + PC1 + PC2 + PC3 + PC4 + PC5 + PC6  + PC7 + PC8 + PC9 + PC10, filter(d, KJONN== 0), family= 'binomial')
 
 ci= data.frame(confint(m1))
 ci$term= row.names(ci)
@@ -27,7 +27,7 @@ m1= tidy(m1) %>% filter(grepl('chrX', term)) %>% inner_join(., ci, by= 'term')
 
 m1$sex= 'Girls'
 
-m2= glm(jaundice~ chrX_109792100_C_T_h1 + chrX_109792100_C_T_h2 + cohort + PC1 + PC2 + PC3 + PC4 + PC5 + PC6  + PC7 + PC8 + PC9 + PC10, filter(d, KJONN== 1), family= 'binomial')
+m2= glm(jaundice~ chrX_109792100_C_T_h1 + chrX_109792100_C_T_h2 + chrX_109792100_C_T_h4 + cohort + PC1 + PC2 + PC3 + PC4 + PC5 + PC6  + PC7 + PC8 + PC9 + PC10, filter(d, KJONN== 1), family= 'binomial')
 
 ci= data.frame(confint(m2))
 ci$term= row.names(ci)
@@ -45,20 +45,22 @@ m1$term= factor(m1$term, levels= rev(c("chrX_109792100_C_T_h1", "chrX_109792100_
 
 p1= ggplot(m1, aes(x = term, y = estimate, colour= sex)) +
   geom_hline(aes(yintercept = 0), size = .2, linetype = "dashed") +
-  geom_hline(yintercept = log(setdiff(seq(0.6, 1.2, 0.1), 1)), size = .1, linetype = "dashed", colour= 'grey') +
+  geom_hline(yintercept = log(setdiff(seq(0.4, 1.3, 0.1), 1)), size = .1, linetype = "dashed", colour= 'grey') +
   geom_errorbar(aes(ymin = lo95, ymax = up95), size = .5, width = 0, position = position_dodge(width=0.3)) +
   theme_cowplot(font_size= 10) +
   geom_point(size = 1, position = position_dodge(width=0.3)) +
 scale_color_manual(values= colorBlindBlack8[c(2, 6)], name= "Sex") +
   coord_trans(y = scales:::exp_trans()) +
-  scale_y_continuous(breaks = log(seq(0.6, 1.2000002, 0.2)), labels = seq(0.6, 1.2, 0.2), limits = log(c(0.6, 1.2000002)),
+  scale_y_continuous(breaks = log(seq(0.4, 1.3000002, 0.2)), labels = seq(0.4, 1.3, 0.2), limits = log(c(0.4, 1.3000002)),
                      expand= expansion(add=0)) +
   ylab('Odds Ratio') +
   theme(axis.title.x= element_blank(),
         axis.ticks.x= element_blank(),
         axis.text.x= element_text(size= 8),
         axis.line = element_line(color = "black", size = 0.2, lineend = "square"),
-        axis.ticks.y = element_line(color = "black", size = 0.2))
+        axis.ticks.y = element_line(color = "black", size = 0.2),
+        legend.position = 'bottom',
+        legend.box = "horizontal")
 
 save_plot(snakemake@output[[1]], plot= p1, base_height= 60, base_width= 90, units= 'mm', dpi= 300)
 
@@ -87,9 +89,9 @@ m1$term= factor(m1$term, levels= (c("fets_X_109792100_C_T", "moms_X_109792100_C_
 p1= ggplot(m1, aes(x = term, y = estimate)) +
   geom_hline(aes(yintercept = 0), size = .2, linetype = "dashed") +
   geom_hline(yintercept = log(setdiff(seq(0.6, 1.2, 0.1), 1)), size = .1, linetype = "dashed", colour= 'grey') +
-  geom_errorbar(aes(ymin = lo95, ymax = up95), size = .5, width = 0, color = colorBlindBlack8[2]) +
+  geom_errorbar(aes(ymin = lo95, ymax = up95), size = .5, width = 0, color = colorBlindBlack8[1]) +
   theme_cowplot(font_size= 10) +
-  geom_point(size = 1, color = colorBlindBlack8[2]) +
+  geom_point(size = 1, color = colorBlindBlack8[1]) +
   coord_trans(y = scales:::exp_trans()) +
   scale_y_continuous(breaks = log(seq(0.6, 1.2000002, 0.2)), labels = seq(0.6, 1.2, 0.2), limits = log(c(0.6, 1.2000002)),
                      expand= expansion(add=0)) +

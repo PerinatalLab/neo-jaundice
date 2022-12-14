@@ -13,6 +13,7 @@ showtext_auto(enable = TRUE)
 d= fread(snakemake@input[[1]], h= T)
 
 #d= fread('/mnt/work/pol/neo-jaundice/results/UGT-missense/delivery/jaundice.txt')
+d= select(d, -names(d)[which(duplicated(names(d)))])
 
 d= filter(d, SVLEN_UL_DG<308, SVLEN_UL_DG> 154)
 

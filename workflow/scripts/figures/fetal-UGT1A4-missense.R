@@ -84,9 +84,9 @@ m1$term= factor(m1$term, levels= rev(c("chr2_234627536_C_A_MT", "chr2_234627536_
 p3= ggplot(m1, aes(x = term, y = estimate)) + 
   geom_hline(aes(yintercept = 0), size = .2, linetype = "dashed") +
   geom_hline(yintercept = log(setdiff(seq(0.0, 1.3, 0.2), 1)), size = .1, linetype = "dashed", colour= 'grey') + 
-  geom_errorbar(aes(ymin = lo95, ymax = up95), size = .5, width = 0, color = colorBlindBlack8[2]) +
+  geom_errorbar(aes(ymin = lo95, ymax = up95), size = .5, width = 0, color = colorBlindBlack8[1]) +
   theme_cowplot(font_size= 10) + 
-  geom_point(size = 1, color = colorBlindBlack8[2]) +
+  geom_point(size = 1, color = colorBlindBlack8[1]) +
   coord_trans(y = scales:::exp_trans()) +
   scale_y_continuous(breaks = log(seq(0.0000001, 1.4000002, 0.2)), labels = seq(0.0, 1.4, 0.2), limits = log(c(0.070, 1.4000002)),
                      expand= expansion(add=0)) +

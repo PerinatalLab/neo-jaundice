@@ -207,7 +207,7 @@ rule sum_haplotype_PGS:
 rule check_PGS:
 	'Check all PGS files are created.'
 	input:
-		expand('results/PGS/delivery/{sample}-{pheno}-PGS.txt', sample= fam_ids['fam_id'], pheno= pheno_file['phenotypes']),
+		expand('results/PGS/delivery/{sample}-{pheno}-PGS.txt', sample= 'fets', pheno= pheno_file['phenotypes']),
 #		expand('results/PGS/delivery/{haplo}-{pheno}-PGS.txt', haplo= haplotypes, pheno= pheno_file['phenotypes'])
 	output:
 		'results/PGS/delivery/checks/PGS_performed.txt'

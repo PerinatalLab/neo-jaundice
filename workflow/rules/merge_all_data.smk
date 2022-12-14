@@ -1,22 +1,22 @@
 rule merge_PGS:
 	''
 	input:
-		'results/PGS/delivery/moms-jaundice-PGS.txt',
-		'results/PGS/delivery/dads-jaundice-PGS.txt',
+#		'results/PGS/delivery/moms-jaundice-PGS.txt',
+#		'results/PGS/delivery/dads-jaundice-PGS.txt',
 		'results/PGS/delivery/fets-jaundice-PGS.txt',
 		'results/effect_origin/aux/ids/parent_offspring_trios.txt',
 		'results/effect_origin/ids/PREG_ID_jaundice.txt'
 	output:
 		'results/PGS/delivery/all-jaundice-PGS.txt'
 	run:
-		moms= pd.read_csv(input[0], sep= '\t', header= 0)
-		dads= pd.read_csv(input[1], sep= '\t', header= 0)
-		fets= pd.read_csv(input[2], sep= '\t', header= 0)
-		trios= pd.read_csv(input[3], sep= '\t', header= 0)
-		d= pd.merge(trios, moms, left_on= 'Mother', right_on= 'IID')
-		d= pd.merge(d, dads, left_on= 'Father', right_on= 'IID')
-		d= pd.merge(d, fets, left_on= 'Child', right_on= 'IID')
-		with open(input[4]) as f:
+#		moms= pd.read_csv(input[0], sep= '\t', header= 0)
+#		dads= pd.read_csv(input[1], sep= '\t', header= 0)
+		fets= pd.read_csv(input[0], sep= '\t', header= 0)
+		trios= pd.read_csv(input[1], sep= '\t', header= 0)
+		d= pd.merge(trios, fets, left_on= 'Child', right_on= 'IID')
+#		d= pd.merge(d, dads, left_on= 'Father', right_on= 'IID')
+#		d= pd.merge(d, fets, left_on= 'Child', right_on= 'IID')
+		with open(input[2]) as f:
 			trio_ids = [int(line.rstrip('\n').replace('.0', '')) for line in f]
 		d= d.loc[d.PREG_ID_1724.isin(trio_ids), :]
 		d.to_csv(output[0], sep= '\t', header= True, index= False)
@@ -24,23 +24,23 @@ rule merge_PGS:
 rule merge_PGS_nochr2:
         ''
         input:
-                'results/PGS/delivery/moms-jaundice-PGS-nochr2.txt',
-                'results/PGS/delivery/dads-jaundice-PGS-nochr2.txt',
+#                'results/PGS/delivery/moms-jaundice-PGS-nochr2.txt',
+#                'results/PGS/delivery/dads-jaundice-PGS-nochr2.txt',
                 'results/PGS/delivery/fets-jaundice-PGS-nochr2.txt',
                 'results/effect_origin/aux/ids/parent_offspring_trios.txt'
         output:
                 'results/PGS/delivery/all-jaundice-PGS-nochr2.txt'
         run:
-                moms= pd.read_csv(input[0], sep= '\t', header= 0)
-		moms.columns= ['IID', 'moms_jaundice_nochr2']
-                dads= pd.read_csv(input[1], sep= '\t', header= 0)
-		dads.columns= ['IID', 'dads_jaundice_nochr2']
-                fets= pd.read_csv(input[2], sep= '\t', header= 0)
+#                moms= pd.read_csv(input[0], sep= '\t', header= 0)
+#		moms.columns= ['IID', 'moms_jaundice_nochr2']
+#                dads= pd.read_csv(input[1], sep= '\t', header= 0)
+#		dads.columns= ['IID', 'dads_jaundice_nochr2']
+                fets= pd.read_csv(input[0], sep= '\t', header= 0)
 		fets.columns= ['IID', 'fets_jaundice_nochr2']
-                trios= pd.read_csv(input[3], sep= '\t', header= 0)
-                d= pd.merge(trios, moms, left_on= 'Mother', right_on= 'IID')
-                d= pd.merge(d, dads, left_on= 'Father', right_on= 'IID')
-                d= pd.merge(d, fets, left_on= 'Child', right_on= 'IID')
+                trios= pd.read_csv(input[1], sep= '\t', header= 0)
+                d= pd.merge(trios, fets, left_on= 'Child', right_on= 'IID')
+#                d= pd.merge(d, dads, left_on= 'Father', right_on= 'IID')
+#                d= pd.merge(d, fets, left_on= 'Child', right_on= 'IID')
                 d.to_csv(output[0], sep= '\t', header= True, index= False)
 
 

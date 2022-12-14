@@ -86,7 +86,7 @@ p1= ggplot(data= don, aes(x= BPcum, y= logpval, colour= CHR2)) +
   geom_hline(yintercept= c(HC, -HC), size= 0.2, linetype= 2, colour= '#878787') +
   coord_cartesian(clip = "off") +
   geom_text_repel(data= filter(don, GENE!= ''), aes(x= BPcum, y= logpval, label= GENE),
-                  colour= c(colorBlindBlack8[2], colorBlindBlack8[2], colorBlindBlack8[6], colorBlindBlack8[6]),
+                  colour= c(colorBlindBlack8[2], colorBlindBlack8[2], colorBlindBlack8[6], colorBlindBlack8[6], colorBlindBlack8[6]),
                   alpha= 1,
                   size= 9/ .pt,
                   force_pull= 0, # do not pull toward data points

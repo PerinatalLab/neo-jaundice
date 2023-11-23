@@ -9,3 +9,4 @@ dependencies:
     - zlib=1.2.11
     - r-dplyr
     - r-r.utils
+    - r-bit64

@@ -32,7 +32,8 @@ rule all:
 		'results/plots/locus-zoom-adult-bilirubin-PGS-jaundice.png',
 		'results/plots/UGT1A-jaundice-eQTL-correlation.pdf',
 		'results/supp_tables/main_results.txt',
-		'results/plots/replication-UGT1A-locus-zoom.png'
+		'results/plots/replication-UGT1A-locus-zoom.png',
+		'results/PheWas/PAN_UKBB/flag/cleaned_file.txt'
 
 include: "rules/common.smk"
 include: "rules/phenotype.smk"
@@ -52,3 +53,4 @@ include: "rules/UGT1A4-missense.smk"
 include: "rules/eQTL_catalogue.smk"
 include: "rules/estimate_LD.smk"
 include: "rules/supp_tables.smk"
+include: "rules/Phewas-coloc.smk"
